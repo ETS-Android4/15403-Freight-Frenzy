@@ -21,7 +21,7 @@ public class Example_Teleop extends LinearOpMode {
 
         while (opModeIsActive()) {
             robot.examplemotor1.setPower(gamepad1.right_stick_y);
-            robot.examplemotor2.setPower(gamepad1.left_stick_y);
+            robot.examplemotor2.setPower(-gamepad1.left_stick_y);
         }
     }
 }
