@@ -11,7 +11,8 @@ HardwareMap hwmap = null;
     public void init(HardwareMap ahwMap) {
         hwMap = ahwMap;
         armmotor =HardwareInitMotor("ArmMotor",true);
-        examplemotor1=HardwareInitMotor("ArmMotor" , true);
+        examplemotor1=HardwareInitMotor("example1" , true);
         examplemotor2 =HardwareInitMotor("example2",true);
+        armmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 }
