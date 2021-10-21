@@ -24,9 +24,9 @@ public class babyTeleop extends LinearOpMode {
             robot.examplemotor2.setPower(gamepad1.left_stick_y);
 
             if (gamepad1.a) {
-                robot.armmotor.setPower(-1);
-            } else if (gamepad1.b) {
                 robot.armmotor.setPower(1);
+            } else if (gamepad1.b) {
+                robot.armmotor.setPower(-1);
             } else {
                 robot.armmotor.setPower(0);
             }
