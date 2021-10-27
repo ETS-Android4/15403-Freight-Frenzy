@@ -8,6 +8,10 @@ import com.qualcomm.robotcore.util.Range;
 @TeleOp (name="babyTeleop", group="Pushbot")
 //@Disabled
 public class babyTeleop extends LinearOpMode {
+
+    public static final double UP_POSITION = .64;
+    public static final double DOWN_POSITION = 1;
+
     babyHardwareMap robot = new babyHardwareMap();
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -15,7 +19,7 @@ public class babyTeleop extends LinearOpMode {
         robot.init(hardwareMap);
         telemetry.addData("Status", "Ready to run");
         telemetry.update();
-
+        //robot.armservo.setPosition(90);
 
         waitForStart();
 
@@ -31,9 +35,9 @@ public class babyTeleop extends LinearOpMode {
                 robot.armmotor.setPower(0);
             }
             if (gamepad1.x){
-                robot.armservo.setPosition(15);
+                robot.armservo.setPosition(DOWN_POSITION);
             }else if (gamepad1.y){
-                robot.armservo.setPosition(-5);
+                robot.armservo.setPosition(UP_POSITION);
 
             }
            /* else {
