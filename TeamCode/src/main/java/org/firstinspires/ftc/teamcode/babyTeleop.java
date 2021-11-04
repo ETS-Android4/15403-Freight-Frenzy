@@ -44,6 +44,13 @@ public class babyTeleop extends LinearOpMode {
                 robot.armservo.setPosition(10);
 
             }*/
+
+            if (gamepad1.up) {
+                robot.intakemotor.setpower(1);
+            }
+            else if (gamepad1.down) {
+                robot.intakemotor.setpower(-1);
+            }
             telemetry.addData("position",robot.armservo.getPosition());
             telemetry.update();
         }
