@@ -11,6 +11,7 @@ HardwareMap hwmap = null;
     public DcMotor armmotor = null;
     public DcMotor intakemotor = null;
     public Servo armservo = null;
+    public Servo intakeservo = null;
     public void init(HardwareMap ahwMap) {
         hwMap = ahwMap;
         armmotor =HardwareInitMotor("ArmMotor",true);
@@ -18,6 +19,7 @@ HardwareMap hwmap = null;
         examplemotor2 =HardwareInitMotor("example2",true);
         intakemotor = HardwareInitMotor("IntakeMotor",true);
         armservo = hwMap.get(Servo.class, "ArmServo");
+        armservo = hwMap.get(Servo.class, "IntakeServo");
         armmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 }
