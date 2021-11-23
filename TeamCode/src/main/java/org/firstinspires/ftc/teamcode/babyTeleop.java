@@ -11,6 +11,7 @@ public class babyTeleop extends LinearOpMode {
 
     public static final double UP_POSITION = .64;
     public static final double DOWN_POSITION = 1;
+    static final double SPIN = 0.5;
 
     babyHardwareMap robot = new babyHardwareMap();
     private ElapsedTime runtime = new ElapsedTime();
@@ -19,14 +20,15 @@ public class babyTeleop extends LinearOpMode {
         robot.init(hardwareMap);
         telemetry.addData("Status", "Ready to run");
         telemetry.update();
-        //robot.armservo.setPosition(90);
 
         waitForStart();
 
         while (opModeIsActive()) {
+            //driving
             robot.examplemotor1.setPower(gamepad1.right_stick_y);
             robot.examplemotor2.setPower(gamepad1.left_stick_y);
 
+            //extends and retracts the linear slide arm.
             if (gamepad1.a) {
                 robot.armmotor.setPower(-1);
             } else if (gamepad1.b) {
@@ -34,6 +36,8 @@ public class babyTeleop extends LinearOpMode {
             } else {
                 robot.armmotor.setPower(0);
             }
+
+            //controls the dropper servo with the x and y buttons
             if (gamepad1.x){
                 robot.armservo.setPosition(DOWN_POSITION);
             }else if (gamepad1.y){
@@ -60,6 +64,16 @@ public class babyTeleop extends LinearOpMode {
                 robot.intakeservo.setPosition(UP_POSITION);
 
             }
+            else if(gamepad1.dpad_left){
+                robot.intakemotor.setPower(0.5);
+            }
+            else if (gamepad1.dpad_right){
+                robot.intakemotor.setPower(-0.5);
+            }
+            else{
+                robot.intakemotor.setPower(0);
+            }
+            //arm position telemetry
             telemetry.addData("position",robot.armservo.getPosition());
             telemetry.update();
         }
