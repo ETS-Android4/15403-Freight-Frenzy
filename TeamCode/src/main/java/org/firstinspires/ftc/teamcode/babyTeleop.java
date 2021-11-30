@@ -9,8 +9,10 @@ import com.qualcomm.robotcore.util.Range;
 //@Disabled
 public class babyTeleop extends LinearOpMode {
 
-    public static final double UP_POSITION = .64;
+    public static final double UP_POSITION = .6;
     public static final double DOWN_POSITION = 1;
+    public static final double OPEN_POSITION = .9;
+    public static final double CLOSED_POSITION = .3;
     static final double SPIN = 0.5;
 
     babyHardwareMap robot = new babyHardwareMap();
@@ -50,21 +52,21 @@ public class babyTeleop extends LinearOpMode {
             }*/
 
             if (gamepad1.dpad_up) {
-                robot.intakemotor.setPower(1);
+                robot.intakemotor.setPower(.7);
             }
             else if (gamepad1.dpad_down) {
-                robot.intakemotor.setPower(-1);
+                robot.intakemotor.setPower(-.7);
             }
             else{
                 robot.intakemotor.setPower(0);
             }
             if (gamepad1.right_bumper){
-                robot.intakeservo.setPosition(DOWN_POSITION);
+                robot.intakeservo.setPosition(OPEN_POSITION);
             }else if (gamepad1.left_bumper){
-                robot.intakeservo.setPosition(UP_POSITION);
+                robot.intakeservo.setPosition(CLOSED_POSITION);
 
             }
-            else if(gamepad1.dpad_left){
+            /*else if(gamepad1.dpad_left){
                 robot.intakemotor.setPower(0.5);
             }
             else if (gamepad1.dpad_right){
@@ -72,9 +74,9 @@ public class babyTeleop extends LinearOpMode {
             }
             else{
                 robot.intakemotor.setPower(0);
-            }
+            }*/
             //arm position telemetry
-            telemetry.addData("position",robot.armservo.getPosition());
+            telemetry.addData("position",robot.intakeservo.getPosition());
             telemetry.update();
         }
     }
