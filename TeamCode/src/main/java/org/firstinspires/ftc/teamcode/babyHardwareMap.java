@@ -12,14 +12,16 @@ HardwareMap hwmap = null;
     public DcMotor intakemotor = null;
     public Servo armservo = null;
     public Servo intakeservo = null;
+    public DcMotor duckmotor = null;
     public void init(HardwareMap ahwMap) {
         hwMap = ahwMap;
         armmotor =HardwareInitMotor("ArmMotor",true);
-        examplemotor1=HardwareInitMotor("example1" , true);
-        examplemotor2 =HardwareInitMotor("example2",true);
+        examplemotor1=HardwareInitMotor("leftDrive" , true);
+        examplemotor2 =HardwareInitMotor("rightDrive",true);
         intakemotor = HardwareInitMotor("IntakeMotor",true);
         armservo = hwMap.get(Servo.class, "ArmServo");
         intakeservo = hwMap.get(Servo.class, "IntakeServo");
         armmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //duckmotor = HardwareInitMotor("Duck", true);
     }
 }
