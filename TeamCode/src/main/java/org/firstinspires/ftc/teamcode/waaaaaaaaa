@@ -26,3 +26,46 @@ if(input ==0){
 }
 l(max);
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+if(button a is pressed){
+do the thing
+}
+else{
+stop doing the thing
+}
+
+if(button a has been pressed in the last half a sec){
+boolean toggle = true:
+while toggle{
+    do the thing
+    if(button a has been pressed in the last half a sec){
+    toggle = false;
+    }
+    }
+}
+
+
+
+
+

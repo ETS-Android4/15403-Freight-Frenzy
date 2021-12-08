@@ -25,8 +25,8 @@ public class babyTeleop extends LinearOpMode {
 
         while (opModeIsActive()) {
             //driving
-            robot.examplemotor1.setPower(gamepad1.right_stick_y);
-            robot.examplemotor2.setPower(gamepad1.left_stick_y);
+            robot.rightDrive.setPower(-gamepad1.right_stick_y);
+            robot.leftDrive.setPower(gamepad1.left_stick_y);
 
             //extends and retracts the linear slide arm.
             if (gamepad1.a) {
@@ -59,9 +59,9 @@ public class babyTeleop extends LinearOpMode {
                 robot.intakemotor.setPower(0);
             }
             if (gamepad1.right_bumper){
-                robot.intakeservo.setPosition(DOWN_POSITION);
-            }else if (gamepad1.left_bumper){
                 robot.intakeservo.setPosition(UP_POSITION);
+            }else if (gamepad1.left_bumper){
+                robot.intakeservo.setPosition(0.1);
 
             }
             else if(gamepad1.dpad_left){
