@@ -9,8 +9,10 @@ import com.qualcomm.robotcore.util.Range;
 //@Disabled
 public class babyTeleop extends LinearOpMode {
 
-    public static final double UP_POSITION = .64;
+    public static final double UP_POSITION = .6;
     public static final double DOWN_POSITION = 1;
+    public static final double OPEN_POSITION = .9;
+    public static final double CLOSED_POSITION = .3;
     static final double SPIN = 0.5;
 
     babyHardwareMap robot = new babyHardwareMap();
@@ -25,22 +27,28 @@ public class babyTeleop extends LinearOpMode {
 
         while (opModeIsActive()) {
             //driving
-            robot.rightDrive.setPower(-gamepad1.right_stick_y);
-            robot.leftDrive.setPower(gamepad1.left_stick_y);
+            robot.examplemotor1.setPower(-gamepad1.left_stick_y);
+            robot.examplemotor2.setPower(gamepad1.right_stick_y);
+
+            if (gamepad1.left_bumper){
+                robot.examplemotor1.setPower(gamepad1.left_stick_y/2);
+                robot.examplemotor2.setPower(gamepad1.right_stick_y/2);
+            }
+
 
             //extends and retracts the linear slide arm.
-            if (gamepad1.a) {
+            if (gamepad2.a) {
                 robot.armmotor.setPower(-1);
-            } else if (gamepad1.b) {
+            } else if (gamepad2.b) {
                 robot.armmotor.setPower(1);
             } else {
                 robot.armmotor.setPower(0);
             }
 
             //controls the dropper servo with the x and y buttons
-            if (gamepad1.x){
+            if (gamepad2.x){
                 robot.armservo.setPosition(DOWN_POSITION);
-            }else if (gamepad1.y){
+            }else if (gamepad2.y){
                 robot.armservo.setPosition(UP_POSITION);
 
             }
@@ -48,23 +56,23 @@ public class babyTeleop extends LinearOpMode {
                 robot.armservo.setPosition(10);
 
             }*/
+         robot.intakemotor.setPower(-gamepad2.left_stick_y/4);
 
-            if (gamepad1.dpad_up) {
-                robot.intakemotor.setPower(1);
+            if (gamepad2.right_bumper){
+                robot.intakeservo.setPosition(OPEN_POSITION);
+            }else if (gamepad2.left_bumper){
+                robot.intakeservo.setPosition(CLOSED_POSITION);
+            }else if (gamepad1.right_bumper){
+                robot.intakeservo.setPosition(CLOSED_POSITION);
             }
-            else if (gamepad1.dpad_down) {
-                robot.intakemotor.setPower(-1);
-            }
-            else{
-                robot.intakemotor.setPower(0);
-            }
-            if (gamepad1.right_bumper){
-                robot.intakeservo.setPosition(UP_POSITION);
-            }else if (gamepad1.left_bumper){
-                robot.intakeservo.setPosition(0.1);
 
+            /*if (gamepad1.a){
+                robot.duckmotor.setPower(SPIN);
             }
-            else if(gamepad1.dpad_left){
+            else {
+                robot.duckmotor.setPower(0);
+            }*/
+            /*else if(gamepad1.dpad_left){
                 robot.intakemotor.setPower(0.5);
             }
             else if (gamepad1.dpad_right){
@@ -72,9 +80,9 @@ public class babyTeleop extends LinearOpMode {
             }
             else{
                 robot.intakemotor.setPower(0);
-            }
+            }*/
             //arm position telemetry
-            telemetry.addData("position",robot.armservo.getPosition());
+            telemetry.addData("position",robot.intakeservo.getPosition());
             telemetry.update();
         }
     }
