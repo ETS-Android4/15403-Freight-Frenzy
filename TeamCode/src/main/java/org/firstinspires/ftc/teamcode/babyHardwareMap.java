@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class babyHardwareMap extends HardwareMapUtil{
 HardwareMap hwmap = null;
-    public DcMotor examplemotor1 = null;
-    public DcMotor examplemotor2 = null;
+    public DcMotor leftDrive = null;
+    public DcMotor rightDrive = null;
     public DcMotor armmotor = null;
     public DcMotor intakemotor = null;
     public Servo armservo = null;
@@ -16,8 +16,8 @@ HardwareMap hwmap = null;
     public void init(HardwareMap ahwMap) {
         hwMap = ahwMap;
         armmotor =HardwareInitMotor("ArmMotor",true);
-        examplemotor1=HardwareInitMotor("leftDrive" , true);
-        examplemotor2 =HardwareInitMotor("rightDrive",true);
+        leftDrive=HardwareInitMotor("leftDrive" , true);
+        rightDrive =HardwareInitMotor("rightDrive",false);
         intakemotor = HardwareInitMotor("IntakeMotor",true);
         armservo = hwMap.get(Servo.class, "ArmServo");
         intakeservo = hwMap.get(Servo.class, "IntakeServo");

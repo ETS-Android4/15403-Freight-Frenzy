@@ -63,11 +63,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Autonomous(name="Pushbot: Auto Drive By Encoder", group="Pushbot")
-@Disabled
+//@Disabled
 public class Sample_Auto extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HardwarePushbot         robot   = new HardwarePushbot();   // Use a Pushbot's hardware
+    babyHardwareMap         robot   = new babyHardwareMap();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
@@ -112,9 +112,6 @@ public class Sample_Auto extends LinearOpMode {
         encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
         encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
-        robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
-        robot.rightClaw.setPosition(0.0);
-        sleep(1000);     // pause for servos to move
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
