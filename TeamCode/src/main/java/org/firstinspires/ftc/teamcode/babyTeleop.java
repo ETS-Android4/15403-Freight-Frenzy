@@ -27,7 +27,7 @@ public class babyTeleop extends LinearOpMode {
 
         while (opModeIsActive()) {
             //driving
-            robot.leftDrive.setPower(-gamepad1.left_stick_y);
+            robot.leftDrive.setPower(gamepad1.left_stick_y);
             robot.rightDrive.setPower(gamepad1.right_stick_y);
 
             if (gamepad1.left_bumper){
@@ -52,6 +52,8 @@ public class babyTeleop extends LinearOpMode {
                 robot.armservo.setPosition(UP_POSITION);
 
             }
+            telemetry.addData("left drive encoder", robot.leftDrive.getCurrentPosition());
+            telemetry.addData("right drive encoder", robot.rightDrive.getCurrentPosition());
            /* else {
                 robot.armservo.setPosition(10);
 
