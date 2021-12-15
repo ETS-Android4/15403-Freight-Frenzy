@@ -62,9 +62,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: Auto Drive By Encoder", group="Pushbot")
+@Autonomous(name="Auto No Vision", group="Pushbot")
 //@Disabled
-public class Sample_Auto extends LinearOpMode {
+public class Encoder_Auto_No_Vision extends LinearOpMode {
 
     /* Declare OpMode members. */
     babyHardwareMap         robot   = new babyHardwareMap();   // Use a Pushbot's hardware
@@ -91,6 +91,7 @@ public class Sample_Auto extends LinearOpMode {
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
         waitForStart();
+
         robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -102,22 +103,48 @@ public class Sample_Auto extends LinearOpMode {
                 robot.leftDrive.getCurrentPosition(),
                 robot.rightDrive.getCurrentPosition());
         telemetry.update();
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
+        //drive forward a bit
         encoderDrive(DRIVE_SPEED,  2,  2, 5.0);
-        sleep(1000);
+        sleep(500);
+        //turn right 90 degrees
         encoderDrive(DRIVE_SPEED,  4.5,  -4.5, 5.0);
-        sleep(1000);
-        encoderDrive(0.5,  -8.5,  -8.5, 5.0);
-        sleep(1000);
+        sleep(500);
+        //drive backwards to the duck spinner
+        encoderDrive(0.5,  -8.6,  -8.6, 5.0);
+        sleep(500);
+        //spin the motor
         robot.duckmotor.setPower(-1);
-        sleep(6000);
+        sleep(4000);
+        //turn off the motor and drive forwards to line up with the goal
         robot.duckmotor.setPower(0);
-        encoderDrive(DRIVE_SPEED,  48,  48, 5.0);
-        sleep(1000);
-        //encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        //sleep(1000);
-        //encoderDrive(DRIVE_SPEED, -4, -4, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
-
+        encoderDrive(DRIVE_SPEED,  16.5,  16.5, 5.0);
+        sleep(500);
+        //turn left towards the goal 90 degrees
+        encoderDrive(DRIVE_SPEED,  -5,  5, 5.0);
+        sleep(500);
+        //drive towards the goal a bit
+        encoderDrive(DRIVE_SPEED,  5,  5, 5.0);
+        sleep(500);
+        //extend the arm
+        robot.armmotor.setPower(-1);
+        sleep(2500);
+        //stop extending and lower the servo
+        robot.armmotor.setPower(0);
+        robot.armservo.setPosition(0.9);
+        sleep(2200);
+        //raise the servo after the block falls down
+        robot.armservo.setPosition(0.3);
+        sleep(500);
+        //lower the arm
+        robot.armmotor.setPower(1);
+        sleep(2000);
+        //turn right again
+        robot.armmotor.setPower(0);
+        encoderDrive(DRIVE_SPEED,  -4.2,  4.2, 5.0);
+        sleep(500);
+        //drive backwards into the warehouse
+        encoderDrive(DRIVE_SPEED,  -30,  -30, 5.0);
+        sleep(500);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
