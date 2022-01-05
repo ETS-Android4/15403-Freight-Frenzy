@@ -46,24 +46,24 @@ import java.util.concurrent.TimeUnit;
 public class Webcam_Operations extends LinearOpMode {
 
     //Frame box for region A (1):
-    private static final int REGIONA_MINX = 0;
-    private static final int REGIONA_MAXX = 0;
-    private static final int REGIONA_MINY = 0;
-    private static final int REGIONA_MAXY = 0;
+    private static final int REGIONA_MINX = 1;
+    private static final int REGIONA_MAXX = 2;
+    private static final int REGIONA_MINY = 1;
+    private static final int REGIONA_MAXY = 2;
     //Frame box for region B (2):
-    private static final int REGIONB_MINX = 0;
-    private static final int REGIONB_MAXX = 0;
-    private static final int REGIONB_MINY = 0;
-    private static final int REGIONB_MAXY = 0;
+    private static final int REGIONB_MINX = 1;
+    private static final int REGIONB_MAXX = 2;
+    private static final int REGIONB_MINY = 1;
+    private static final int REGIONB_MAXY = 2;
     //Frame box for region C (3):
-    private static final int REGIONC_MINX = 0;
-    private static final int REGIONC_MAXX = 0;
-    private static final int REGIONC_MINY = 0;
-    private static final int REGIONC_MAXY = 0;
+    private static final int REGIONC_MINX = 1;
+    private static final int REGIONC_MAXX = 2;
+    private static final int REGIONC_MINY = 1;
+    private static final int REGIONC_MAXY = 2;
 
 
     private static final String TAG = "Webcam Sample";
-    private static final int secondsPermissionTimeout = 10;
+    private static final int secondsPermissionTimeout = 100;
 
     private CameraManager cameraManager;
     private WebcamName cameraName;
@@ -86,7 +86,18 @@ public class Webcam_Operations extends LinearOpMode {
     //----------------------------------------------------------------------------------------------
 
     @Override
-    public void runOpMode() throws InterruptedException { }
+    public void runOpMode() throws InterruptedException {
+        int val = 0;
+        Bitmap bmp = null;
+        telemetry.addLine("Waiting for start...");
+        telemetry.update();
+        waitForStart();
+        while(opModeIsActive()) {
+            bmp = getBarcodeBitmap();
+            val = barcodeValue(bmp, 0, 0);
+            telemetry.update();
+        }
+    }
 
     public void visionInit() {
 
@@ -95,6 +106,8 @@ public class Webcam_Operations extends LinearOpMode {
     public int barcodeValue(Bitmap frameMap, int targetColorMin, int targetColorMax) {
         //Divide main bitmap into 3 subsets
         //Bitmap A
+        telemetry.addLine("Attempting to divide bitmap...");
+        telemetry.update();
         int aHeight = REGIONA_MAXY - REGIONA_MINY;
         int aWidth = REGIONA_MAXX - REGIONA_MINX;
         Bitmap bitmapA = Bitmap.createBitmap(frameMap, REGIONA_MINX, REGIONA_MINY, aWidth, aHeight);
@@ -107,11 +120,15 @@ public class Webcam_Operations extends LinearOpMode {
         int cWidth = REGIONC_MAXX - REGIONC_MINX;
         Bitmap bitmapC = Bitmap.createBitmap(frameMap, REGIONC_MINX, REGIONC_MINY, cWidth, cHeight);
 
+        telemetry.addLine("Bitmap divided. Attempting to count pixels...");
+        telemetry.update();
         //Get how many pixels fall within target color for each bitmap
         int aPixels = pixelsColor(bitmapA, targetColorMin, targetColorMax);
         int bPixels = pixelsColor(bitmapB, targetColorMin, targetColorMax);
         int cPixels = pixelsColor(bitmapC, targetColorMin, targetColorMax);
 
+        telemetry.addLine("Pixels counted. Attempting to compare counts");
+        telemetry.update();
         if(aPixels > bPixels && aPixels > cPixels) {
             return 1;
         }
@@ -140,8 +157,8 @@ public class Webcam_Operations extends LinearOpMode {
         int maxR = red(colorMax);
         int maxG = green(colorMax);
         int maxB = blue(colorMax);
-        for(int i = 0; i <= frameMap.getHeight(); i++) {
-            for(int j = 0; j <= frameMap.getWidth(); j++) {
+        for(int i = 1; i <= frameMap.getHeight(); i++) {
+            for(int j = 1; j <= frameMap.getWidth(); j++) {
                 int curPixel = frameMap.getPixel(j, i);
                 int pR = red(curPixel);
                 int pG = green(curPixel);
@@ -160,7 +177,6 @@ public class Webcam_Operations extends LinearOpMode {
     }
 
     public Bitmap getBarcodeBitmap() {
-        Bitmap frameMap = null;
 
         callbackHandler = CallbackLooper.getDefault().getHandler();
 
@@ -170,23 +186,43 @@ public class Webcam_Operations extends LinearOpMode {
         initializeFrameQueue(2);
         //AppUtil.getInstance().ensureDirectoryExists(captureDirectory);
 
+        Bitmap bmp = null;
+
         try {
+            telemetry.addLine("Attempting to Open Camera...");
             openCamera();
             if (camera == null) return null;
-
+            telemetry.addLine("Camera Opened. Attempting to Start Camera...");
             startCamera();
             if (cameraCaptureSession == null) return null;
-
-            Bitmap bmp = frameQueue.poll();
-            if (bmp != null) {
-                frameMap = bmp;
+            telemetry.addLine("Camera Started. Attempting to pull bmp from poll...");
+            telemetry.update();
+            sleep(1000);
+            boolean continueCaptureAttempt = true;
+            while(continueCaptureAttempt == true) {
+                bmp = frameQueue.poll();
+                if (bmp != null) {
+                    continueCaptureAttempt = false;
+                    onNewFrame(bmp);
+                    telemetry.addLine("bitmap pulled from camera");
+                } else {
+                    telemetry.addLine("Failed to pull bitmap. Null from poll");
+                }
+                telemetry.update();
+                sleep(1000);
             }
-
             telemetry.update();
         } finally {
             closeCamera();
+            telemetry.addLine("Camera Close.");
+            telemetry.update();
         }
-        return frameMap;
+        return bmp;
+    }
+
+    private void onNewFrame(Bitmap frame) {
+        //saveBitmap(frame);
+        //frame.recycle(); // not strictly necessary, but helpful
     }
 
 
