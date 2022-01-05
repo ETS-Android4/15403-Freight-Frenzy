@@ -18,6 +18,12 @@ Duck is port 2
 
  */
 package org.firstinspires.ftc.teamcode;
+import android.graphics.Bitmap;
+import android.graphics.ImageFormat;
+import android.os.Handler;
+
+import androidx.annotation.NonNull;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -26,8 +32,20 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.android.util.Size;
+import org.firstinspires.ftc.robotcore.external.function.Consumer;
+import org.firstinspires.ftc.robotcore.external.function.Continuation;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.Camera;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCaptureRequest;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCaptureSequenceId;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCaptureSession;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCharacteristics;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraException;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraFrame;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraManager;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -36,8 +54,19 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.robotcore.internal.collections.EvictingBlockingQueue;
+import org.firstinspires.ftc.robotcore.internal.network.CallbackLooper;
+import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
+import org.firstinspires.ftc.robotcore.internal.system.ContinuationSynchronizer;
+import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 @TeleOp(name="Auto_Util", group="abstract")
 @Disabled
@@ -74,14 +103,23 @@ public abstract class Auto_Util extends LinearOpMode{
     String servo1name = "wobbleS", crservo1name = "pastaS", crservo2name = "pastaS2";
     String verticalLeftEncoderName = lbName, verticalRightEncoderName = lfName, horizontalEncoderName = rfName;
     //Variables for Camera
-    private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
+    /*private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Quad";
     private static final String LABEL_SECOND_ELEMENT = "Single";
     private static int stackSize;
     private static final String VUFORIA_KEY =
             "ASr8vlr/////AAABmQLvbOpFkkU9uYwJWNx5o2Antqe3VGKoedUKq3jObB/CKqlUQVEt/vJFkLrOinRFu+wKPJJx1LZe8vYwTUNhYX0/ygb2Oukz3sgnh3k0TMAWBL0gJXnlaw2JzGzwXMy7kL4K1EUdIoWKJgyMSDkWDeNa9JXMelIkU0mgPhQ1PpSqfDiFWcIpalRHVDMF+lR7wR67jJjt7sUWe3TPc2RoUZI9Ratv22wKzXGZTWUEHcvPIkJRyZjjXzzWper4e7gVhJBLEtZA/0U5Nqlasyl0A39AzatrIkCAa16P3J8Z0KKtza1YSKZRYc/Sz022CaSqCtgtG1jq5oK14I2JjQZIufdNLNc9uaXz3qN08jRaxujJ";
     private VuforiaLocalizer vuforia;
-    private TFObjectDetector tfod;
+    private TFObjectDetector tfod;*/
+    private static final String TAG = "Webcam Sample";
+    private static final int secondsPermissionTimeout = Integer.MAX_VALUE;
+    private CameraManager cameraManager;
+    private WebcamName cameraName;
+    private Camera camera;
+    private CameraCaptureSession cameraCaptureSession;
+    private EvictingBlockingQueue<Bitmap> frameQueue;
+    private File captureDirectory = AppUtil.ROBOT_DATA_DIR;
+    private Handler callbackHandler;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -457,7 +495,9 @@ public abstract class Auto_Util extends LinearOpMode{
     -
     ___________________________________________________________________________________________________________________________________
      */
-    public int ub_vision() {
+
+
+    /*public int ub_vision() {
          List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
          if(updatedRecognitions != null) {
              int i = 0;
@@ -498,7 +538,7 @@ public abstract class Auto_Util extends LinearOpMode{
         tfodParameters.minResultConfidence = 0.8f;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
-    }
+    }*/
 }
 /*
 ___________________________________________________________________________________________________________________________________
