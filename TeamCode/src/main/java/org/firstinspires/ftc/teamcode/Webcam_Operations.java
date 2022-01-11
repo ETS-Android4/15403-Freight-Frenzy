@@ -46,7 +46,7 @@ import java.util.concurrent.TimeUnit;
 public class Webcam_Operations extends LinearOpMode {
 
     //Frame box for region A (1):
-    private static final int REGIONA_MINX = 400;
+    private static final int REGIONA_MINX = 1;
     private static final int REGIONA_MAXX = 640;
     private static final int REGIONA_MINY = 1;
     private static final int REGIONA_MAXY = 480;
@@ -63,10 +63,10 @@ public class Webcam_Operations extends LinearOpMode {
 
     int maxAll = getColorInt(255, 255, 255, 255);
     int minAll = getColorInt(255, 0, 0, 0);
-    int maxRed = getColorInt(255, 255, 80, 80);
-    int minRed = getColorInt(255, 184, 30, 30);
-    int maxBlue = getColorInt(255, 39, 129, 232);
-    int minBlue = getColorInt(255, 2, 58, 122);
+    int maxRed = getColorInt(255, 255, 150, 150);
+    int minRed = getColorInt(255, 150, 0, 0);
+    int maxBlue = getColorInt(255, 150, 150, 255);
+    int minBlue = getColorInt(255, 0, 0, 130);
     int maxWhite = getColorInt(255, 92, 255, 228);
     int minWhite = getColorInt(255, 25, 181, 155);
 
