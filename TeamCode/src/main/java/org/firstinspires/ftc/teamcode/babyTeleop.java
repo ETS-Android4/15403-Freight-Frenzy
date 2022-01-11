@@ -58,6 +58,8 @@ public class babyTeleop extends LinearOpMode {
                 robot.armservo.setPosition(10);
 
             }*/
+            //===========
+
          robot.intakemotor.setPower(-gamepad2.left_stick_y/4);
             if(robot.intakemotor.getCurrentPosition()<=(-700)){
                 robot.intakemotor.setPower(0);
