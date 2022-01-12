@@ -30,7 +30,7 @@ public class babyTeleop extends LinearOpMode {
             robot.leftDrive.setPower(gamepad1.left_stick_y);
             robot.rightDrive.setPower(gamepad1.right_stick_y);
 
-            if (gamepad1.left_bumper){
+            while (gamepad1.left_bumper){
                 robot.leftDrive.setPower(gamepad1.left_stick_y/2);
                 robot.rightDrive.setPower(gamepad1.right_stick_y/2);
             }
@@ -60,9 +60,14 @@ public class babyTeleop extends LinearOpMode {
             }*/
             //===========
 
-         robot.intakemotor.setPower(-gamepad2.left_stick_y/4);
+         /*robot.intakemotor.setPower(-gamepad2.left_stick_y/4);S
             if(robot.intakemotor.getCurrentPosition()<=(-700)){
                 robot.intakemotor.setPower(0);
+           }*/
+            if (gamepad2.dpad_up){
+                robot.intakemotor.setTargetPosition(0);
+            }else if (gamepad2.dpad_down){
+                robot.intakemotor.setTargetPosition(-700);
             }
 
             if (gamepad2.right_bumper){
@@ -73,31 +78,17 @@ public class babyTeleop extends LinearOpMode {
                 robot.intakeservo.setPosition(CLOSED_POSITION);
             }
 
-            /*if (gamepad1.a){
-                robot.duckmotor.setPower(SPIN);
-            }
-            else {
-                robot.duckmotor.setPower(0);
-            }*/
-            /*else if(gamepad1.dpad_left){
-                robot.intakemotor.setPower(0.5);
-            }
-            else if (gamepad1.dpad_right){
-                robot.intakemotor.setPower(-0.5);
-            }
-            else{
-                robot.intakemotor.setPower(0);
-            }*/
+
             //arm position telemetry
             telemetry.addData("position",robot.intakeservo.getPosition());
             telemetry.update();
             telemetry.addData("intake pos", robot.intakemotor.getCurrentPosition());
             telemetry.update();
 
-            if(gamepad1.dpad_up){
+            /*if(gamepad1.dpad_up){
                 robot.intakemotor.setTargetPosition(0);
                 robot.intakeservo.setPosition(OPEN_POSITION);
-            }
+            }*/
         }
 
 
