@@ -65,10 +65,11 @@ public class Webcam_Operations extends LinearOpMode {
     int minAll = getColorInt(255, 0, 0, 0);
     int maxRed = getColorInt(255, 255, 150, 150);
     int minRed = getColorInt(255, 150, 0, 0);
-    int maxBlue = getColorInt(255, 150, 150, 255);
-    int minBlue = getColorInt(255, 0, 0, 130);
+    int maxBlue = getColorInt(255, 150, 255, 255);
+    int minBlue = getColorInt(255, 120, 120, 120);
     int maxWhite = getColorInt(255, 92, 255, 228);
     int minWhite = getColorInt(255, 25, 181, 155);
+    //100 100 100
 
     //Width: 640 , Height: 480
 
@@ -100,7 +101,7 @@ public class Webcam_Operations extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         int val = 0;
         Bitmap bmp = null;
-        telemetry.addLine("Waiting for start...");
+        telemetry.addLine("Ready to start...");
         telemetry.update();
         waitForStart();
         while(opModeIsActive()) {
@@ -110,9 +111,11 @@ public class Webcam_Operations extends LinearOpMode {
             //For ALL Colors
             //val = barcodeValue(bmp, minAll, maxAll);
             //For Red Tape
-            val = barcodeValue(bmp, minRed, maxRed);
+            //val = barcodeValue(bmp, minRed, maxRed);
             //For Blue Tape
-            //val = barcodeValue(bmp, minBlue, maxBlue);
+            val = barcodeValue(bmp, minBlue, maxBlue);
+            //107 255 164
+            //93 255 152
             //For Team Marker
             //val = barcodeValue(bmp, minWhite, maxWhite);
             telemetry.addLine("Direction Val: " + val);
@@ -125,7 +128,7 @@ public class Webcam_Operations extends LinearOpMode {
     public int barcodeValue(Bitmap frameMap, int targetColorMin, int targetColorMax) {
         //Divide main bitmap into 3 subsets
         //Bitmap A
-        telemetry.addLine("Attempting to divide bitmap...");
+        //telemetry.addLine("Attempting to divide bitmap...");
         telemetry.update();
         int aHeight = REGIONA_MAXY - REGIONA_MINY;
         int aWidth = REGIONA_MAXX - REGIONA_MINX;
@@ -200,7 +203,7 @@ public class Webcam_Operations extends LinearOpMode {
         int maxR = red(colorMax);
         int maxG = green(colorMax);
         int maxB = blue(colorMax);
-        telemetry.addLine("Color Values retrieved. Proceeding to count pixels...");
+        //telemetry.addLine("Color Values retrieved. Proceeding to count pixels...");
         for(int i = 1; i < frameMap.getHeight(); i++) {
             for(int j = 1; j < frameMap.getWidth(); j++) {
                 int curPixel = frameMap.getPixel(j, i);
@@ -216,8 +219,11 @@ public class Webcam_Operations extends LinearOpMode {
                 }
             }
         }
+        int pix = frameMap.getPixel(320, 240);
+        telemetry.addLine("Pixel RGB: " + red(pix) + " / " + blue(pix) + " / " + green(pix));
         telemetry.addLine("Pixels counted: " + pixelCount);
         telemetry.update();
+        sleep(10000);
         return pixelCount;
     }
 
@@ -240,19 +246,15 @@ public class Webcam_Operations extends LinearOpMode {
             //telemetry.addLine("Camera Opened. Attempting to Start Camera...");
             startCamera();
             if (cameraCaptureSession == null) return null;
-            //telemetry.addLine("Camera Started. Attempting to pull bmp from poll...");
+            telemetry.addLine("Camera Started. Attempting to pull bmp from poll...");
             telemetry.update();
-            boolean continueCaptureAttempt = true;
-            while(continueCaptureAttempt == true) {
+            while(true) {
                 bmp = frameQueue.poll();
                 if (bmp != null) {
-                    continueCaptureAttempt = false;
-                    onNewFrame(bmp);
+                    //onNewFrame(bmp);
                     telemetry.addLine("bitmap pulled from camera");
-                } else {
-                    telemetry.addLine("Failed to pull bitmap. Null from poll");
+                    break;
                 }
-                telemetry.update();
             }
             telemetry.update();
         } finally {
