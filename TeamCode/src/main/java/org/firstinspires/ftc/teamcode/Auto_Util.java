@@ -715,7 +715,6 @@ public abstract class Auto_Util extends LinearOpMode{
 
         Bitmap bmp = null;
 
-        try {
             //telemetry.addLine("Attempting to Open Camera...");
             if (camera == null) return null;
             //telemetry.addLine("Camera Opened. Attempting to Start Camera...");
@@ -731,11 +730,6 @@ public abstract class Auto_Util extends LinearOpMode{
                 }
             }
             telemetry.update();
-        } finally {
-            closeCamera();
-            telemetry.addLine("Camera Close.");
-            telemetry.update();
-        }
         return bmp;
     }
 
