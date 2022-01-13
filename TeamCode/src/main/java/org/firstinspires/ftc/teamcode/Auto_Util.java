@@ -574,7 +574,7 @@ public abstract class Auto_Util extends LinearOpMode{
         int bHeight = bMaxY - bMinY;
         int bWidth = bMaxX - bMinX;
         Bitmap bitmapB = Bitmap.createBitmap(frameMap, bMinX, bMinY, bWidth, bHeight);
-        if(bitmapA != null) {
+        if(bitmapB != null) {
             telemetry.addLine("bitmapB created.");
         }
         else {
@@ -584,7 +584,7 @@ public abstract class Auto_Util extends LinearOpMode{
         int cHeight = cMaxY - cMinY;
         int cWidth = cMaxX - cMinX;
         Bitmap bitmapC = Bitmap.createBitmap(frameMap, cMinX, cMinY, cWidth, cHeight);
-        if(bitmapA != null) {
+        if(bitmapC != null) {
             telemetry.addLine("bitmapC created.");
         }
         else {
@@ -598,7 +598,7 @@ public abstract class Auto_Util extends LinearOpMode{
         int aPixels = newPixelsColorCount(bitmapA, targetColor);
         telemetry.addLine("aPixels has been counted.");
         //==========
-        sleep(10000);
+        //sleep(10000);
         //==========
         int bPixels = newPixelsColorCount(bitmapB, targetColor);
         telemetry.addLine("bPixels has been counted.");
@@ -607,17 +607,37 @@ public abstract class Auto_Util extends LinearOpMode{
 
         telemetry.addLine("Pixels counted. Attempting to compare counts");
         telemetry.update();
-        if(aPixels > bPixels && aPixels > cPixels) {
-            return 1;
+        telemetry.addLine("A_Pixels: " + aPixels);
+        telemetry.addLine("B_Pixels: " + bPixels);
+        if(useTwoRegions) {
+            telemetry.addLine("Total Pixels (c): " + cPixels);
         }
-        else if(bPixels > aPixels && bPixels > cPixels) {
-            return 2;
+        else {
+            telemetry.addLine("C_Pixels: " + cPixels);
         }
-        else if(cPixels > bPixels && cPixels > aPixels) {
-            return 3;
+        telemetry.update();
+        //    sleep(10000);
+        if(useTwoRegions == true) {
+            if(aPixels < 500 && aPixels < bPixels) {
+                return 2;
+            }
+            else if(bPixels < 500 && bPixels < aPixels) {
+                return 3;
+            }
+            else {
+                return 1;
+            }
         }
-        else if(aPixels > 0 || bPixels > 0 || cPixels > 0) {
-            return 4;
+        else {
+            if(aPixels > bPixels && aPixels > cPixels) {
+                return 1;
+            }
+            else if(bPixels > aPixels && bPixels > cPixels) {
+                return 2;
+            }
+            else if(cPixels > bPixels && cPixels > aPixels) {
+                return 3;
+            }
         }
         return 0;
     }
@@ -685,7 +705,7 @@ public abstract class Auto_Util extends LinearOpMode{
         //telemetry.addLine("Pixel RGB: " + red(pix) + " / " + blue(pix) + " / " + green(pix));
         telemetry.addLine("Pixels counted: " + pixelCount);
         telemetry.update();
-        sleep(10000);
+        //sleep(10000);
         return pixelCount;
     }
 

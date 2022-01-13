@@ -29,7 +29,7 @@ public class Auto_Vision extends Auto_Util {
         //Vision code to determine path at beginning
         int path = 0;
         Bitmap bmp = getBarcodeBitmap();
-        telemetry.addLine("AUtonomous program ahs te bitmap");
+        telemetry.addLine("Auto program has bmp");
         telemetry.update();
         path = barcodeValue(bmp, RED);
         if(path == 1) {
