@@ -44,6 +44,13 @@ public class babyTeleop extends LinearOpMode {
             } else {
                 robot.armmotor.setPower(0);
             }
+            while(robot.armmotor.getCurrentPosition()<=(0)){
+                robot.armmotor.setPower(-1);}
+            if(gamepad2.dpad_down){
+                while(robot.intakemotor.getCurrentPosition()>=(0)){
+                    robot.intakemotor.setPower(1);
+                }
+            }
 
             //controls the dropper servo with the x and y buttons
             if (gamepad2.x){
@@ -60,10 +67,10 @@ public class babyTeleop extends LinearOpMode {
             }*/
             //===========
 
-         /*robot.intakemotor.setPower(-gamepad2.left_stick_y/4);S
-            if(robot.intakemotor.getCurrentPosition()<=(-700)){
-                robot.intakemotor.setPower(0);
-           }*/
+         robot.intakemotor.setPower(-gamepad2.left_stick_y/4);
+            while(robot.intakemotor.getCurrentPosition()<=(-700)){
+                robot.intakemotor.setPower(-1);
+           }
             if (gamepad2.dpad_up){
                 robot.intakemotor.setTargetPosition(0);
             }else if (gamepad2.dpad_down){
