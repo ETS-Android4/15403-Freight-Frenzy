@@ -66,12 +66,17 @@ public class Webcam_Operations extends LinearOpMode {
     int maxRed = getColorInt(255, 255, 150, 150);
     int minRed = getColorInt(255, 150, 0, 0);
     int maxBlue = getColorInt(255, 150, 255, 255);
-    int minBlue = getColorInt(255, 120, 120, 120);
-    int maxWhite = getColorInt(255, 92, 255, 228);
-    int minWhite = getColorInt(255, 25, 181, 155);
+    int minBlue = getColorInt(255, 100, 100, 100);
+    int maxCap = getColorInt(255, 92, 255, 228);
+    int minCap = getColorInt(255, 25, 181, 155);
     //100 100 100
 
     //Width: 640 , Height: 480
+
+    private static final int RED = 1;
+    private static final int BLUE = 2;
+    private static final int CAP = 3;
+
 
 
     private static final String TAG = "Webcam Sample";
@@ -111,13 +116,13 @@ public class Webcam_Operations extends LinearOpMode {
             //For ALL Colors
             //val = barcodeValue(bmp, minAll, maxAll);
             //For Red Tape
-            //val = barcodeValue(bmp, minRed, maxRed);
+            val = barcodeValue(bmp, RED);
             //For Blue Tape
-            val = barcodeValue(bmp, minBlue, maxBlue);
+            //val = barcodeValue(bmp, BLUE);
             //107 255 164
             //93 255 152
             //For Team Marker
-            //val = barcodeValue(bmp, minWhite, maxWhite);
+            //val = barcodeValue(bmp, CAP);
             telemetry.addLine("Direction Val: " + val);
             telemetry.update();
         }
@@ -125,7 +130,8 @@ public class Webcam_Operations extends LinearOpMode {
 
     public void visionInit() { }
 
-    public int barcodeValue(Bitmap frameMap, int targetColorMin, int targetColorMax) {
+    public int barcodeValue(Bitmap frameMap, int targetColor) {
+        //Decide on color
         //Divide main bitmap into 3 subsets
         //Bitmap A
         //telemetry.addLine("Attempting to divide bitmap...");
@@ -163,14 +169,15 @@ public class Webcam_Operations extends LinearOpMode {
         telemetry.addLine("Bitmap divided. Attempting to count pixels...");
         telemetry.update();
         //Get how many pixels fall within target color for each bitmap
-        int aPixels = pixelsColor(bitmapA, targetColorMin, targetColorMax);
+        //int aPixels = pixelsColor(bitmapA, targetColorMin, targetColorMax);
+        int aPixels = newPixelsColorCount(bitmapA, targetColor);
         telemetry.addLine("aPixels has been counted.");
         //==========
         sleep(10000);
         //==========
-        int bPixels = pixelsColor(bitmapB, targetColorMin, targetColorMax);
+        int bPixels = newPixelsColorCount(bitmapB, targetColor);
         telemetry.addLine("bPixels has been counted.");
-        int cPixels = pixelsColor(bitmapC, targetColorMin, targetColorMax);
+        int cPixels = newPixelsColorCount(bitmapC, targetColor);
         telemetry.addLine("cPixels has been counted.");
 
         telemetry.addLine("Pixels counted. Attempting to compare counts");
@@ -193,6 +200,68 @@ public class Webcam_Operations extends LinearOpMode {
     public int getColorInt(int alphaVal, int redVal, int greenVal, int blueVal) {
         int combColor = (alphaVal & 0xff) << 24 | (redVal & 0xff) << 16 | (greenVal & 0xff) << 8 | (blueVal & 0xff);
         return combColor;
+    }
+
+    public int newPixelsColorCount(Bitmap frameMap, int color) {
+        int pixelCount = 0;
+        if(color == 1) {//RED
+            int minR = red(minRed);
+            int minG = green(minRed);
+            int minB = blue(minRed);
+            int maxR = red(maxRed);
+            int maxG = green(maxRed);
+            int maxB = blue(maxRed);
+            for(int i = 1; i < frameMap.getHeight(); i++) {
+                for(int j = 1; j < frameMap.getWidth(); j++) {
+                    int curPixel = frameMap.getPixel(j, i);
+                    int pR = red(curPixel);
+                    int pG = green(curPixel);
+                    int pB = blue(curPixel);
+                    if(pR >= minR && pR <= maxR) {
+                        if(pG >= minG && pG <= maxG) {
+                            if(pB >= minB && pB <= maxB) {
+                                pixelCount++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else if(color == 2) {//BLUE
+            int minR = red(minBlue);
+            int minG = green(minBlue);
+            int minB = blue(minBlue);
+            int maxR = red(maxBlue);
+            int maxG = green(maxBlue);
+            int maxB = blue(maxBlue);
+            for(int i = 1; i < frameMap.getHeight(); i++) {
+                for(int j = 1; j < frameMap.getWidth(); j++) {
+                    int curPixel = frameMap.getPixel(j, i);
+                    int pR = red(curPixel);
+                    int pG = green(curPixel);
+                    int pB = blue(curPixel);
+                    if(pR >= minR && pR <= maxR) {
+                        if(pG >= minG && pG <= maxG) {
+                            if(pB >= minB && pB <= maxB) {
+                                if(pB > pR + 20 && pB > pG + 20) {
+                                    pixelCount++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else if(color == 3) {//CAP
+
+        }
+        //telemetry.addLine("Color Values retrieved. Proceeding to count pixels...");
+        //int pix = frameMap.getPixel(320, 240);
+        //telemetry.addLine("Pixel RGB: " + red(pix) + " / " + blue(pix) + " / " + green(pix));
+        telemetry.addLine("Pixels counted: " + pixelCount);
+        telemetry.update();
+        sleep(10000);
+        return pixelCount;
     }
 
     public int pixelsColor(Bitmap frameMap, int colorMin, int colorMax) {

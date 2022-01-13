@@ -18,6 +18,10 @@ Duck is port 2
 
  */
 package org.firstinspires.ftc.teamcode;
+import static android.graphics.Color.blue;
+import static android.graphics.Color.green;
+import static android.graphics.Color.red;
+
 import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
 import android.os.Handler;
@@ -85,6 +89,21 @@ public abstract class Auto_Util extends LinearOpMode{
     static final double DRIVE_SPEED = 0.1;
     static final double STRAFE_SPEED = 0.4;
     static final double TARGET_SHOOTER_SPEED = 2;
+
+    //Vision Colors
+    int maxAll = getColorInt(255, 255, 255, 255);
+    int minAll = getColorInt(255, 0, 0, 0);
+    int maxRed = getColorInt(255, 255, 150, 150);
+    int minRed = getColorInt(255, 150, 0, 0);
+    int maxBlue = getColorInt(255, 150, 255, 255);
+    int minBlue = getColorInt(255, 100, 100, 100);
+    int maxCap = getColorInt(255, 92, 255, 228);
+    int minCap = getColorInt(255, 25, 181, 155);
+
+    public static final int RED = 1;
+    public static final int BLUE = 2;
+    public static final int CAP = 3;
+
     //Drive motors
     DcMotor rfmotor, rbmotor, lfmotor, lbmotor;
     //Utility motors
@@ -102,24 +121,31 @@ public abstract class Auto_Util extends LinearOpMode{
     String util1name = "Intake", util2name = "pastaM", util3name = "shootM", util4name = "wobbleG";
     String servo1name = "wobbleS", crservo1name = "pastaS", crservo2name = "pastaS2";
     String verticalLeftEncoderName = lbName, verticalRightEncoderName = lfName, horizontalEncoderName = rfName;
+
     //Variables for Camera
-    /*private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
-    private static final String LABEL_FIRST_ELEMENT = "Quad";
-    private static final String LABEL_SECOND_ELEMENT = "Single";
-    private static int stackSize;
-    private static final String VUFORIA_KEY =
-            "ASr8vlr/////AAABmQLvbOpFkkU9uYwJWNx5o2Antqe3VGKoedUKq3jObB/CKqlUQVEt/vJFkLrOinRFu+wKPJJx1LZe8vYwTUNhYX0/ygb2Oukz3sgnh3k0TMAWBL0gJXnlaw2JzGzwXMy7kL4K1EUdIoWKJgyMSDkWDeNa9JXMelIkU0mgPhQ1PpSqfDiFWcIpalRHVDMF+lR7wR67jJjt7sUWe3TPc2RoUZI9Ratv22wKzXGZTWUEHcvPIkJRyZjjXzzWper4e7gVhJBLEtZA/0U5Nqlasyl0A39AzatrIkCAa16P3J8Z0KKtza1YSKZRYc/Sz022CaSqCtgtG1jq5oK14I2JjQZIufdNLNc9uaXz3qN08jRaxujJ";
-    private VuforiaLocalizer vuforia;
-    private TFObjectDetector tfod;*/
     private static final String TAG = "Webcam Sample";
-    private static final int secondsPermissionTimeout = Integer.MAX_VALUE;
+    private static final int secondsPermissionTimeout = 100;
     private CameraManager cameraManager;
     private WebcamName cameraName;
     private Camera camera;
     private CameraCaptureSession cameraCaptureSession;
     private EvictingBlockingQueue<Bitmap> frameQueue;
-    private File captureDirectory = AppUtil.ROBOT_DATA_DIR;
     private Handler callbackHandler;
+    public boolean useTwoRegions = false;
+    int aMinX = 1;
+    int aMaxX = 640;
+    int aMinY = 1;
+    int aMaxY = 480;
+    //
+    int bMinX = 1;
+    int bMaxX = 640;
+    int bMinY = 1;
+    int bMaxY = 480;
+    //
+    int cMinX = 1;
+    int cMaxX = 640;
+    int cMinY = 1;
+    int cMaxY = 480;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -495,50 +521,331 @@ public abstract class Auto_Util extends LinearOpMode{
     -
     ___________________________________________________________________________________________________________________________________
      */
-
-
-    /*public int ub_vision() {
-         List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-         if(updatedRecognitions != null) {
-             int i = 0;
-             for(Recognition recognition : updatedRecognitions) {
-                 if(recognition.getLabel() == LABEL_FIRST_ELEMENT) {
-                     stackSize = 2;
-                     return stackSize; }
-                 else if(stackSize != 2 && recognition.getLabel() == LABEL_SECOND_ELEMENT) {
-                     stackSize = 1; }
-                 telemetry.addData("Recognition Label: ", recognition.getLabel());
-             }
-         }
-        return stackSize;
+    public void useTwoRegions(boolean val) {
+        useTwoRegions = val;
     }
-    public void initCamera() {
-         initVuforia();
-         initTfod();
-         stackSize = 0;
-         if(tfod != null) {
-             tfod.activate();
-             tfod.setZoom(1.0, 16.0 / 9.0);
-         }
-    }
-    private void initVuforia() {
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-        parameters.vuforiaLicenseKey = VUFORIA_KEY;
 
-        //SWITCH FOR MIGRATING BETWEEN SMARTPHONE AND WEBCAM
-        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
-        //parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-
-        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+    public void setVisionRegionsA(int minX, int maxX, int minY, int maxY) {
+        aMinX = minX;
+        aMaxX = maxX;
+        aMinY = minY;
+        aMaxY = maxY;
     }
-    private void initTfod() {
-        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.8f;
-        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
-    }*/
+
+    public void setVisionRegionB(int minX, int maxX, int minY, int maxY) {
+        bMinX = minX;
+        bMaxX = maxX;
+        bMinY = minY;
+        bMaxY = maxY;
+    }
+
+    public void setVisionRegionsC(int minX, int maxX, int minY, int maxY) {
+        cMinX = minX;
+        cMaxX = maxX;
+        cMinY = minY;
+        cMaxY = maxY;
+    }
+
+    public void initVision() {
+        callbackHandler = CallbackLooper.getDefault().getHandler();
+
+        cameraManager = ClassFactory.getInstance().getCameraManager();
+        cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
+        openCamera();
+        startCamera();
+    }
+
+    public int barcodeValue(Bitmap frameMap, int targetColor) {
+        //Decide on color
+        //Divide main bitmap into 3 subsets
+        //Bitmap A
+        //telemetry.addLine("Attempting to divide bitmap...");
+        telemetry.update();
+        int aHeight = aMaxY - aMinY;
+        int aWidth = aMaxX - aMinX;
+        Bitmap bitmapA = Bitmap.createBitmap(frameMap, aMinX, aMinY, aWidth, aHeight);
+        if(bitmapA != null) {
+            telemetry.addLine("bitmapA created.");
+        }
+        else {
+            telemetry.addLine("Failed to create bitmapA");
+        }
+        //Bitmap B
+        int bHeight = bMaxY - bMinY;
+        int bWidth = bMaxX - bMinX;
+        Bitmap bitmapB = Bitmap.createBitmap(frameMap, bMinX, bMinY, bWidth, bHeight);
+        if(bitmapA != null) {
+            telemetry.addLine("bitmapB created.");
+        }
+        else {
+            telemetry.addLine("Failed to create bitmapB");
+        }
+        //Bitmap C
+        int cHeight = cMaxY - cMinY;
+        int cWidth = cMaxX - cMinX;
+        Bitmap bitmapC = Bitmap.createBitmap(frameMap, cMinX, cMinY, cWidth, cHeight);
+        if(bitmapA != null) {
+            telemetry.addLine("bitmapC created.");
+        }
+        else {
+            telemetry.addLine("Failed to create bitmapC");
+        }
+
+        telemetry.addLine("Bitmap divided. Attempting to count pixels...");
+        telemetry.update();
+        //Get how many pixels fall within target color for each bitmap
+        //int aPixels = pixelsColor(bitmapA, targetColorMin, targetColorMax);
+        int aPixels = newPixelsColorCount(bitmapA, targetColor);
+        telemetry.addLine("aPixels has been counted.");
+        //==========
+        sleep(10000);
+        //==========
+        int bPixels = newPixelsColorCount(bitmapB, targetColor);
+        telemetry.addLine("bPixels has been counted.");
+        int cPixels = newPixelsColorCount(bitmapC, targetColor);
+        telemetry.addLine("cPixels has been counted.");
+
+        telemetry.addLine("Pixels counted. Attempting to compare counts");
+        telemetry.update();
+        if(aPixels > bPixels && aPixels > cPixels) {
+            return 1;
+        }
+        else if(bPixels > aPixels && bPixels > cPixels) {
+            return 2;
+        }
+        else if(cPixels > bPixels && cPixels > aPixels) {
+            return 3;
+        }
+        else if(aPixels > 0 || bPixels > 0 || cPixels > 0) {
+            return 4;
+        }
+        return 0;
+    }
+
+    public int getColorInt(int alphaVal, int redVal, int greenVal, int blueVal) {
+        int combColor = (alphaVal & 0xff) << 24 | (redVal & 0xff) << 16 | (greenVal & 0xff) << 8 | (blueVal & 0xff);
+        return combColor;
+    }
+
+    public int newPixelsColorCount(Bitmap frameMap, int color) {
+        int pixelCount = 0;
+        if(color == 1) {//RED
+            int minR = red(minRed);
+            int minG = green(minRed);
+            int minB = blue(minRed);
+            int maxR = red(maxRed);
+            int maxG = green(maxRed);
+            int maxB = blue(maxRed);
+            for(int i = 1; i < frameMap.getHeight(); i++) {
+                for(int j = 1; j < frameMap.getWidth(); j++) {
+                    int curPixel = frameMap.getPixel(j, i);
+                    int pR = red(curPixel);
+                    int pG = green(curPixel);
+                    int pB = blue(curPixel);
+                    if(pR >= minR && pR <= maxR) {
+                        if(pG >= minG && pG <= maxG) {
+                            if(pB >= minB && pB <= maxB) {
+                                pixelCount++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else if(color == 2) {//BLUE
+            int minR = red(minBlue);
+            int minG = green(minBlue);
+            int minB = blue(minBlue);
+            int maxR = red(maxBlue);
+            int maxG = green(maxBlue);
+            int maxB = blue(maxBlue);
+            for(int i = 1; i < frameMap.getHeight(); i++) {
+                for(int j = 1; j < frameMap.getWidth(); j++) {
+                    int curPixel = frameMap.getPixel(j, i);
+                    int pR = red(curPixel);
+                    int pG = green(curPixel);
+                    int pB = blue(curPixel);
+                    if(pR >= minR && pR <= maxR) {
+                        if(pG >= minG && pG <= maxG) {
+                            if(pB >= minB && pB <= maxB) {
+                                if(pB > pR + 20 && pB > pG + 20) {
+                                    pixelCount++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else if(color == 3) {//CAP
+
+        }
+        //telemetry.addLine("Color Values retrieved. Proceeding to count pixels...");
+        //int pix = frameMap.getPixel(320, 240);
+        //telemetry.addLine("Pixel RGB: " + red(pix) + " / " + blue(pix) + " / " + green(pix));
+        telemetry.addLine("Pixels counted: " + pixelCount);
+        telemetry.update();
+        sleep(10000);
+        return pixelCount;
+    }
+
+    public Bitmap getBarcodeBitmap() {
+        initializeFrameQueue(2);
+        //AppUtil.getInstance().ensureDirectoryExists(captureDirectory);
+
+        Bitmap bmp = null;
+
+        try {
+            //telemetry.addLine("Attempting to Open Camera...");
+            if (camera == null) return null;
+            //telemetry.addLine("Camera Opened. Attempting to Start Camera...");
+            if (cameraCaptureSession == null) return null;
+            telemetry.addLine("Camera Started. Attempting to pull bmp from poll...");
+            telemetry.update();
+            while(true) {
+                bmp = frameQueue.poll();
+                if (bmp != null) {
+                    //onNewFrame(bmp);
+                    telemetry.addLine("bitmap pulled from camera");
+                    break;
+                }
+            }
+            telemetry.update();
+        } finally {
+            closeCamera();
+            telemetry.addLine("Camera Close.");
+            telemetry.update();
+        }
+        return bmp;
+    }
+
+    private void onNewFrame(Bitmap frame) {
+        //saveBitmap(frame);
+        //frame.recycle(); // not strictly necessary, but helpful
+    }
+
+    private void initializeFrameQueue(int capacity) {
+        /** The frame queue will automatically throw away bitmap frames if they are not processed
+         * quickly by the OpMode. This avoids a buildup of frames in memory */
+        frameQueue = new EvictingBlockingQueue<Bitmap>(new ArrayBlockingQueue<Bitmap>(capacity));
+        frameQueue.setEvictAction(new Consumer<Bitmap>() {
+            @Override public void accept(Bitmap frame) {
+                // RobotLog.ii(TAG, "frame recycled w/o processing");
+                frame.recycle(); // not strictly necessary, but helpful
+            }
+        });
+    }
+
+    private void openCamera() {
+        if (camera != null) return; // be idempotent
+
+        Deadline deadline = new Deadline(secondsPermissionTimeout, TimeUnit.SECONDS);
+        camera = cameraManager.requestPermissionAndOpenCamera(deadline, cameraName, null);
+        if (camera == null) {
+            error("camera not found or permission to use not granted: %s", cameraName);
+        }
+    }
+
+    private void startCamera() {
+        if (cameraCaptureSession != null) return; // be idempotent
+
+        /** YUY2 is supported by all Webcams, per the USB Webcam standard: See "USB Device Class Definition
+         * for Video Devices: Uncompressed Payload, Table 2-1". Further, often this is the *only*
+         * image format supported by a camera */
+        final int imageFormat = ImageFormat.YUY2;
+
+        /** Verify that the image is supported, and fetch size and desired frame rate if so */
+        CameraCharacteristics cameraCharacteristics = cameraName.getCameraCharacteristics();
+        if (!contains(cameraCharacteristics.getAndroidFormats(), imageFormat)) {
+            error("image format not supported");
+            return;
+        }
+        final Size size = cameraCharacteristics.getDefaultSize(imageFormat);
+        final int fps = cameraCharacteristics.getMaxFramesPerSecond(imageFormat, size);
+
+        /** Some of the logic below runs asynchronously on other threads. Use of the synchronizer
+         * here allows us to wait in this method until all that asynchrony completes before returning. */
+        final ContinuationSynchronizer<CameraCaptureSession> synchronizer = new ContinuationSynchronizer<>();
+        try {
+            /** Create a session in which requests to capture frames can be made */
+            camera.createCaptureSession(Continuation.create(callbackHandler, new CameraCaptureSession.StateCallbackDefault() {
+                @Override public void onConfigured(@NonNull CameraCaptureSession session) {
+                    try {
+                        /** The session is ready to go. Start requesting frames */
+                        final CameraCaptureRequest captureRequest = camera.createCaptureRequest(imageFormat, size, fps);
+                        session.startCapture(captureRequest,
+                                new CameraCaptureSession.CaptureCallback() {
+                                    @Override public void onNewFrame(@NonNull CameraCaptureSession session, @NonNull CameraCaptureRequest request, @NonNull CameraFrame cameraFrame) {
+                                        /** A new frame is available. The frame data has <em>not</em> been copied for us, and we can only access it
+                                         * for the duration of the callback. So we copy here manually. */
+                                        Bitmap bmp = captureRequest.createEmptyBitmap();
+                                        cameraFrame.copyToBitmap(bmp);
+                                        frameQueue.offer(bmp);
+                                    }
+                                },
+                                Continuation.create(callbackHandler, new CameraCaptureSession.StatusCallback() {
+                                    @Override public void onCaptureSequenceCompleted(@NonNull CameraCaptureSession session, CameraCaptureSequenceId cameraCaptureSequenceId, long lastFrameNumber) {
+                                        RobotLog.ii(TAG, "capture sequence %s reports completed: lastFrame=%d", cameraCaptureSequenceId, lastFrameNumber);
+                                    }
+                                })
+                        );
+                        synchronizer.finish(session);
+                    } catch (CameraException|RuntimeException e) {
+                        RobotLog.ee(TAG, e, "exception starting capture");
+                        error("exception starting capture");
+                        session.close();
+                        synchronizer.finish(null);
+                    }
+                }
+            }));
+        } catch (CameraException|RuntimeException e) {
+            RobotLog.ee(TAG, e, "exception starting camera");
+            error("exception starting camera");
+            synchronizer.finish(null);
+        }
+
+        /** Wait for all the asynchrony to complete */
+        try {
+            synchronizer.await();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        /** Retrieve the created session. This will be null on error. */
+        cameraCaptureSession = synchronizer.getValue();
+    }
+
+    private void stopCamera() {
+        if (cameraCaptureSession != null) {
+            cameraCaptureSession.stopCapture();
+            cameraCaptureSession.close();
+            cameraCaptureSession = null;
+        }
+    }
+
+    private void closeCamera() {
+        stopCamera();
+        if (camera != null) {
+            camera.close();
+            camera = null;
+        }
+    }
+
+    private void error(String msg) {
+        telemetry.log().add(msg);
+        telemetry.update();
+    }
+    private void error(String format, Object...args) {
+        telemetry.log().add(format, args);
+        telemetry.update();
+    }
+
+    private boolean contains(int[] array, int value) {
+        for (int i : array) {
+            if (i == value) return true;
+        }
+        return false;
+    }
 }
 /*
 ___________________________________________________________________________________________________________________________________

@@ -13,7 +13,7 @@ public class babyTeleop extends LinearOpMode {
     public static final double DOWN_POSITION = 1;
     public static final double OPEN_POSITION = .9;
     public static final double CLOSED_POSITION = .3;
-    static final double SPIN = 0.5;
+    static final double SPIN = -1;
 
     babyHardwareMap robot = new babyHardwareMap();
     private ElapsedTime runtime = new ElapsedTime();
@@ -59,11 +59,12 @@ public class babyTeleop extends LinearOpMode {
 
             }*/
             //===========
+           // if(robot.intakemotor.getCurrentPosition()<=(-700)){
+            //    robot.intakemotor.setPower(0);
+           // }
 
             robot.intakemotor.setPower(-gamepad2.left_stick_y/4);
-            if(robot.intakemotor.getCurrentPosition()<=(-700)){
-                robot.intakemotor.setPower(0);
-            }
+
 
             if (gamepad2.right_bumper){
                 robot.intakeservo.setPosition(OPEN_POSITION);
@@ -73,12 +74,12 @@ public class babyTeleop extends LinearOpMode {
                 robot.intakeservo.setPosition(CLOSED_POSITION);
             }
 
-            /*if (gamepad1.a){
+            if (gamepad1.a){
                 robot.duckmotor.setPower(SPIN);
             }
             else {
                 robot.duckmotor.setPower(0);
-            }*/
+            }
             /*else if(gamepad1.dpad_left){
                 robot.intakemotor.setPower(0.5);
             }
