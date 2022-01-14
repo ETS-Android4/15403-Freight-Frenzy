@@ -59,10 +59,13 @@ public class Blue_A_Vision_Auto extends Auto_Util {
     int minBlue = getColorInt(255, 100, 100, 100);
     int maxCap = getColorInt(255, 92, 255, 228);
     int minCap = getColorInt(255, 25, 181, 155);
+    int maxYellow = getColorInt(255, 255, 255, 100);
+    int minYellow = getColorInt(255, 130, 130, 0);
 
     public static final int RED = 1;
     public static final int BLUE = 2;
     public static final int CAP = 3;
+    public static final int YELLOW = 4;
 
 
 
@@ -118,7 +121,7 @@ public class Blue_A_Vision_Auto extends Auto_Util {
         int path = 0;
         bmp = getBarcodeBitmap();       //Get a bitmap (Pixel Array) from Camera
         telemetry.addLine("Auto program has bitmap");
-        path = barcodeValue(bmp, RED);  //Decide on a path while on RED side of field from bitmap
+        path = barcodeValue(bmp, YELLOW);  //Decide on a path while on RED side of field from bitmap
         telemetry.addLine("Proceeding with Path: " + path);
         telemetry.update();
         sleep(200); //Sleep to quickly display chosen path before proceeding
@@ -351,19 +354,24 @@ public class Blue_A_Vision_Auto extends Auto_Util {
         telemetry.update();
         telemetry.addLine("A_Pixels: " + aPixels);
         telemetry.addLine("B_Pixels: " + bPixels);
-        if(useTwoRegions) {
+        telemetry.update();
+        sleep(200);
+        /*if(useTwoRegions) {
             telemetry.addLine("Total Pixels (c): " + cPixels);
         }
         else {
             telemetry.addLine("C_Pixels: " + cPixels);
         }
-        telemetry.update();
+        telemetry.update();*/
         //    sleep(10000);
+        int thresh = 500;
+        if(targetColor == RED) { thresh = 500; }
+        else if(targetColor == YELLOW) { thresh = 2; }
         if(useTwoRegions == true) {
-            if(aPixels < 500 && aPixels < bPixels) {
+            if(aPixels > thresh && aPixels > bPixels) {
                 return 2;
             }
-            else if(bPixels < 500 && bPixels < aPixels) {
+            else if(bPixels > thresh && bPixels > aPixels) {
                 return 3;
             }
             else {
@@ -391,15 +399,15 @@ public class Blue_A_Vision_Auto extends Auto_Util {
 
     public int newPixelsColorCount(Bitmap frameMap, int color) {
         int pixelCount = 0;
-        if(color == 1) {//RED
+        if(color == RED) {//RED
             int minR = red(minRed);
             int minG = green(minRed);
             int minB = blue(minRed);
             int maxR = red(maxRed);
             int maxG = green(maxRed);
             int maxB = blue(maxRed);
-            for(int i = 1; i < frameMap.getHeight() - 1; i += 2) {
-                for(int j = 1; j < frameMap.getWidth() - 1; j += 2) {
+            for(int i = 1; i < frameMap.getHeight(); i++) {
+                for(int j = 1; j < frameMap.getWidth(); j++) {
                     int curPixel = frameMap.getPixel(j, i);
                     int pR = red(curPixel);
                     int pG = green(curPixel);
@@ -414,15 +422,15 @@ public class Blue_A_Vision_Auto extends Auto_Util {
                 }
             }
         }
-        else if(color == 2) {//BLUE
+        else if(color == BLUE) {//BLUE
             int minR = red(minBlue);
             int minG = green(minBlue);
             int minB = blue(minBlue);
             int maxR = red(maxBlue);
             int maxG = green(maxBlue);
             int maxB = blue(maxBlue);
-            for(int i = 1; i < frameMap.getHeight() - 1; i += 2) {
-                for(int j = 1; j < frameMap.getWidth() - 1; j += 2) {
+            for(int i = 1; i < frameMap.getHeight(); i++) {
+                for(int j = 1; j < frameMap.getWidth(); j++) {
                     int curPixel = frameMap.getPixel(j, i);
                     int pR = red(curPixel);
                     int pG = green(curPixel);
@@ -439,15 +447,70 @@ public class Blue_A_Vision_Auto extends Auto_Util {
                 }
             }
         }
-        else if(color == 3) {//CAP
+        else if(color == CAP) {//CAP
 
+        }
+        else if(color == YELLOW) {//YELLOW
+            int minR = red(minYellow);
+            int minG = green(minYellow);
+            int minB = blue(minYellow);
+            int maxR = red(maxYellow);
+            int maxG = green(maxYellow);
+            int maxB = blue(maxYellow);
+            for(int i = 1; i < frameMap.getHeight(); i++) {
+                for(int j = 1; j < frameMap.getWidth(); j++) {
+                    int curPixel = frameMap.getPixel(j, i);
+                    int pR = red(curPixel);
+                    int pG = green(curPixel);
+                    int pB = blue(curPixel);
+                    if(pR >= minR && pR <= maxR) {
+                        if(pG >= minG && pG <= maxG) {
+                            if(pB >= minB && pB <= maxB && 20 + (pB * 2) < pR + pG) {
+                                pixelCount++;
+                            }
+                        }
+                    }
+                }
+            }
         }
         //telemetry.addLine("Color Values retrieved. Proceeding to count pixels...");
         //int pix = frameMap.getPixel(320, 240);
         //telemetry.addLine("Pixel RGB: " + red(pix) + " / " + blue(pix) + " / " + green(pix));
+        //telemetry.addLine("Pixels counted: " + pixelCount);
+        //telemetry.update();
+        //sleep(10000);
+        return pixelCount;
+    }
+
+    public int pixelsColor(Bitmap frameMap, int colorMin, int colorMax) {
+        int pixelCount = 0;
+        int minR = red(colorMin);
+        int minG = green(colorMin);
+        int minB = blue(colorMin);
+        int maxR = red(colorMax);
+        int maxG = green(colorMax);
+        int maxB = blue(colorMax);
+        //telemetry.addLine("Color Values retrieved. Proceeding to count pixels...");
+        for(int i = 1; i < frameMap.getHeight(); i++) {
+            for(int j = 1; j < frameMap.getWidth(); j++) {
+                int curPixel = frameMap.getPixel(j, i);
+                int pR = red(curPixel);
+                int pG = green(curPixel);
+                int pB = blue(curPixel);
+                if(pR >= minR && pR <= maxR) {
+                    if(pG >= minG && pG <= maxG) {
+                        if(pB >= minB && pB <= maxB) {
+                            pixelCount++;
+                        }
+                    }
+                }
+            }
+        }
+        int pix = frameMap.getPixel(320, 240);
+        telemetry.addLine("Pixel RGB: " + red(pix) + " / " + blue(pix) + " / " + green(pix));
         telemetry.addLine("Pixels counted: " + pixelCount);
         telemetry.update();
-        //sleep(10000);
+        sleep(10000);
         return pixelCount;
     }
 
@@ -566,7 +629,7 @@ public class Blue_A_Vision_Auto extends Auto_Util {
                                 })
                         );
                         synchronizer.finish(session);
-                    } catch (CameraException |RuntimeException e) {
+                    } catch (CameraException|RuntimeException e) {
                         RobotLog.ee(TAG, e, "exception starting capture");
                         error("exception starting capture");
                         session.close();
