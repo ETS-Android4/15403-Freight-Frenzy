@@ -66,22 +66,21 @@ public class babyTeleop extends LinearOpMode {
 
             }*/
             //===========
-
+            //coding for the intake motor
          robot.intakemotor.setPower(-gamepad2.left_stick_y/4);
             while(robot.intakemotor.getCurrentPosition()<=(-700)){
                 robot.intakemotor.setPower(-1);
            }
-            if (gamepad2.dpad_up){
+            /*if (gamepad2.dpad_up){
                 robot.intakemotor.setTargetPosition(0);
             }else if (gamepad2.dpad_down){
                 robot.intakemotor.setTargetPosition(-700);
-            }
+            }*/
 
+            //open and close the intake servo
             if (gamepad2.right_bumper){
                 robot.intakeservo.setPosition(OPEN_POSITION);
             }else if (gamepad2.left_bumper){
-                robot.intakeservo.setPosition(CLOSED_POSITION);
-            }else if (gamepad1.right_bumper){
                 robot.intakeservo.setPosition(CLOSED_POSITION);
             }
 
