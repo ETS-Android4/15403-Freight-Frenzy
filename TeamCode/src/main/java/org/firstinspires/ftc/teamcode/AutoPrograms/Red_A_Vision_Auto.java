@@ -59,6 +59,8 @@ public class Red_A_Vision_Auto extends Auto_Util {
     int minBlue = getColorInt(255, 100, 100, 100);
     int maxCap = getColorInt(255, 92, 255, 228);
     int minCap = getColorInt(255, 25, 181, 155);
+    int maxYellow = getColorInt(255, 255, 255, 100);
+    int minYellow = getColorInt(255, 180, 180, 0);
 
     public static final int RED = 1;
     public static final int BLUE = 2;
