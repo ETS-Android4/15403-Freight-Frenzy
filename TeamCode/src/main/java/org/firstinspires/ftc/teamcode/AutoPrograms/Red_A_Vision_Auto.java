@@ -112,37 +112,28 @@ public class Red_A_Vision_Auto extends Auto_Util {
         telemetry.update();
         waitForStart();
 
-        //=============
-        //Vision code to determine path at beginning
+        //======================== Start of Auto
+
+        //Vision code to determine path at beginning of match
         int path = 0;
-        bmp = getBarcodeBitmap();
-        telemetry.addLine("Auto program has bmp");
+        bmp = getBarcodeBitmap();       //Get a bitmap (Pixel Array) from Camera
+        telemetry.addLine("Auto program has bitmap");
+        path = barcodeValue(bmp, RED);  //Decide on a path while on RED side of field from bitmap
+        telemetry.addLine("Proceeding with Path: " + path);
         telemetry.update();
-        path = barcodeValue(bmp, RED);
-        if (path == 1) {
-            telemetry.addLine("Proceeding with Path 1");
-        } else if (path == 2) {
-            telemetry.addLine("Proceeding with Path 2");
-        } else if (path == 3) {
-            telemetry.addLine("Proceeding with Path 3");
-        } else {
-            telemetry.addLine("No path decided on.");
-        }
-        telemetry.update();
-        sleep(2000);
+        sleep(200); //Sleep to quickly display chosen path before proceeding
 
-        //Go to duck wheel
-
-        //drive forward a bit
+        //==================== Start moving
+        //Drive forward a small amount
         encoderDrive(DRIVE_SPEED,  2,  2, 5.0);
         sleep(500);
-        //turn right 90 degrees
+        //Pivot RIGHT 90 degrees
         encoderDrive(DRIVE_SPEED,  4.5,  -4.5, 5.0);
         sleep(500);
-        //drive backwards to the duck spinner
+        //Drive reverse up to duck motor
         encoderDrive(0.6,  -6.5,  -6.5, 5.0);
         sleep(500);
-        //spin the motor
+        //Spin duck motor
         robot.duckmotor.setPower(-1);
         sleep(4000);
         //turn off the motor and drive forwards to line up with the goal
@@ -188,7 +179,7 @@ public class Red_A_Vision_Auto extends Auto_Util {
             robot.armservo.setPosition(1);
             //drive backwards to shake out block
             sleep(1000);
-            encoderDrive(0.7,-1,-1,5);
+            encoderDrive(0.7,-1,-   1,5);
             sleep(1000);
             //raise the servo after the block falls down
             robot.armservo.setPosition(0.3);
