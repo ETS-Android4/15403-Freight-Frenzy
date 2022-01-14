@@ -45,22 +45,6 @@ import java.util.concurrent.TimeUnit;
 @TeleOp(name="Webcam Operations", group ="LinearOpMode")
 public class Webcam_Operations extends LinearOpMode {
 
-    //Frame box for region A (1):
-    private static final int REGIONA_MINX = 1;
-    private static final int REGIONA_MAXX = 640;
-    private static final int REGIONA_MINY = 1;
-    private static final int REGIONA_MAXY = 480;
-    //Frame box for region B (2):
-    private static final int REGIONB_MINX = 1;
-    private static final int REGIONB_MAXX = 10;
-    private static final int REGIONB_MINY = 1;
-    private static final int REGIONB_MAXY = 10;
-    //Frame box for region C (3):
-    private static final int REGIONC_MINX = 1;
-    private static final int REGIONC_MAXX = 10;
-    private static final int REGIONC_MINY = 1;
-    private static final int REGIONC_MAXY = 10;
-
     int maxAll = getColorInt(255, 255, 255, 255);
     int minAll = getColorInt(255, 0, 0, 0);
     int maxRed = getColorInt(255, 255, 150, 150);
@@ -69,34 +53,37 @@ public class Webcam_Operations extends LinearOpMode {
     int minBlue = getColorInt(255, 100, 100, 100);
     int maxCap = getColorInt(255, 92, 255, 228);
     int minCap = getColorInt(255, 25, 181, 155);
-    //100 100 100
 
-    //Width: 640 , Height: 480
-
-    private static final int RED = 1;
-    private static final int BLUE = 2;
-    private static final int CAP = 3;
+    public static final int RED = 1;
+    public static final int BLUE = 2;
+    public static final int CAP = 3;
 
 
 
+    //Variables for Camera
     private static final String TAG = "Webcam Sample";
     private static final int secondsPermissionTimeout = 100;
-
     private CameraManager cameraManager;
     private WebcamName cameraName;
     private Camera camera;
     private CameraCaptureSession cameraCaptureSession;
-
     private EvictingBlockingQueue<Bitmap> frameQueue;
-
-    /** State regarding where and how to save frames when the 'A' button is pressed.
-    private int captureCounter = 0;
-    private File captureDirectory = AppUtil.ROBOT_DATA_DIR;*/
-
-    /** A utility object that indicates where the asynchronous callbacks from the camera
-     * infrastructure are to run. In this OpMode, that's all hidden from you (but see {@link #startCamera}
-     * if you're curious): no knowledge of multi-threading is needed here. */
     private Handler callbackHandler;
+    public boolean useTwoRegions = false;
+    int aMinX = 1;
+    int aMaxX = 640;
+    int aMinY = 1;
+    int aMaxY = 480;
+    //
+    int bMinX = 1;
+    int bMaxX = 640;
+    int bMinY = 1;
+    int bMaxY = 480;
+    //
+    int cMinX = 1;
+    int cMaxX = 640;
+    int cMinY = 1;
+    int cMaxY = 480;
 
     //----------------------------------------------------------------------------------------------
     // Main OpMode entry
@@ -104,31 +91,43 @@ public class Webcam_Operations extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        int val = 0;
+        useTwoRegions = true;
+        setVisionRegionsA(1, 320, 1, 480);
+        setVisionRegionB(321, 640, 1, 480);
+        int path = 0;
         Bitmap bmp = null;
         telemetry.addLine("Ready to start...");
         telemetry.update();
         waitForStart();
         while(opModeIsActive()) {
             bmp = getBarcodeBitmap();
-            /*telemetry.addLine("Full Width: " + bmp.getWidth());
-            telemetry.addLine("Full Height: " + bmp.getHeight());*/
-            //For ALL Colors
-            //val = barcodeValue(bmp, minAll, maxAll);
-            //For Red Tape
-            val = barcodeValue(bmp, RED);
-            //For Blue Tape
-            //val = barcodeValue(bmp, BLUE);
-            //107 255 164
-            //93 255 152
-            //For Team Marker
-            //val = barcodeValue(bmp, CAP);
-            telemetry.addLine("Direction Val: " + val);
+            path = barcodeValue(bmp, RED);
+            telemetry.addLine("Direction Val: " + path);
             telemetry.update();
+            sleep(5000);
         }
     }
 
-    public void visionInit() { }
+    public void setVisionRegionsA(int minX, int maxX, int minY, int maxY) {
+        aMinX = minX;
+        aMaxX = maxX;
+        aMinY = minY;
+        aMaxY = maxY;
+    }
+
+    public void setVisionRegionB(int minX, int maxX, int minY, int maxY) {
+        bMinX = minX;
+        bMaxX = maxX;
+        bMinY = minY;
+        bMaxY = maxY;
+    }
+
+    public void setVisionRegionsC(int minX, int maxX, int minY, int maxY) {
+        cMinX = minX;
+        cMaxX = maxX;
+        cMinY = minY;
+        cMaxY = maxY;
+    }
 
     public int barcodeValue(Bitmap frameMap, int targetColor) {
         //Decide on color
@@ -136,9 +135,9 @@ public class Webcam_Operations extends LinearOpMode {
         //Bitmap A
         //telemetry.addLine("Attempting to divide bitmap...");
         telemetry.update();
-        int aHeight = REGIONA_MAXY - REGIONA_MINY;
-        int aWidth = REGIONA_MAXX - REGIONA_MINX;
-        Bitmap bitmapA = Bitmap.createBitmap(frameMap, REGIONA_MINX, REGIONA_MINY, aWidth, aHeight);
+        int aHeight = aMaxY - aMinY;
+        int aWidth = aMaxX - aMinX;
+        Bitmap bitmapA = Bitmap.createBitmap(frameMap, aMinX, aMinY, aWidth, aHeight);
         if(bitmapA != null) {
             telemetry.addLine("bitmapA created.");
         }
@@ -146,20 +145,20 @@ public class Webcam_Operations extends LinearOpMode {
             telemetry.addLine("Failed to create bitmapA");
         }
         //Bitmap B
-        int bHeight = REGIONB_MAXY - REGIONB_MINY;
-        int bWidth = REGIONB_MAXX - REGIONB_MINX;
-        Bitmap bitmapB = Bitmap.createBitmap(frameMap, REGIONB_MINX, REGIONB_MINY, bWidth, bHeight);
-        if(bitmapA != null) {
+        int bHeight = bMaxY - bMinY;
+        int bWidth = bMaxX - bMinX;
+        Bitmap bitmapB = Bitmap.createBitmap(frameMap, bMinX, bMinY, bWidth, bHeight);
+        if(bitmapB != null) {
             telemetry.addLine("bitmapB created.");
         }
         else {
             telemetry.addLine("Failed to create bitmapB");
         }
         //Bitmap C
-        int cHeight = REGIONC_MAXY - REGIONC_MINY;
-        int cWidth = REGIONC_MAXX - REGIONC_MINX;
-        Bitmap bitmapC = Bitmap.createBitmap(frameMap, REGIONC_MINX, REGIONC_MINY, cWidth, cHeight);
-        if(bitmapA != null) {
+        int cHeight = cMaxY - cMinY;
+        int cWidth = cMaxX - cMinX;
+        Bitmap bitmapC = Bitmap.createBitmap(frameMap, cMinX, cMinY, cWidth, cHeight);
+        if(bitmapC != null) {
             telemetry.addLine("bitmapC created.");
         }
         else {
@@ -173,7 +172,7 @@ public class Webcam_Operations extends LinearOpMode {
         int aPixels = newPixelsColorCount(bitmapA, targetColor);
         telemetry.addLine("aPixels has been counted.");
         //==========
-        sleep(10000);
+        //sleep(10000);
         //==========
         int bPixels = newPixelsColorCount(bitmapB, targetColor);
         telemetry.addLine("bPixels has been counted.");
@@ -182,17 +181,37 @@ public class Webcam_Operations extends LinearOpMode {
 
         telemetry.addLine("Pixels counted. Attempting to compare counts");
         telemetry.update();
-        if(aPixels > bPixels && aPixels > cPixels) {
-            return 1;
+        telemetry.addLine("A_Pixels: " + aPixels);
+        telemetry.addLine("B_Pixels: " + bPixels);
+        if(useTwoRegions) {
+            telemetry.addLine("Total Pixels (c): " + cPixels);
         }
-        else if(bPixels > aPixels && bPixels > cPixels) {
-            return 2;
+        else {
+            telemetry.addLine("C_Pixels: " + cPixels);
         }
-        else if(cPixels > bPixels && cPixels > aPixels) {
-            return 3;
+        telemetry.update();
+        //    sleep(10000);
+        if(useTwoRegions == true) {
+            if(aPixels < 500 && aPixels < bPixels) {
+                return 2;
+            }
+            else if(bPixels < 500 && bPixels < aPixels) {
+                return 3;
+            }
+            else {
+                return 1;
+            }
         }
-        else if(aPixels > 0 || bPixels > 0 || cPixels > 0) {
-            return 4;
+        else {
+            if(aPixels > bPixels && aPixels > cPixels) {
+                return 1;
+            }
+            else if(bPixels > aPixels && bPixels > cPixels) {
+                return 2;
+            }
+            else if(cPixels > bPixels && cPixels > aPixels) {
+                return 3;
+            }
         }
         return 0;
     }
@@ -260,7 +279,7 @@ public class Webcam_Operations extends LinearOpMode {
         //telemetry.addLine("Pixel RGB: " + red(pix) + " / " + blue(pix) + " / " + green(pix));
         telemetry.addLine("Pixels counted: " + pixelCount);
         telemetry.update();
-        sleep(10000);
+        //sleep(10000);
         return pixelCount;
     }
 
