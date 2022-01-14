@@ -63,7 +63,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Autonomous(name="Auto No Vision", group="Pushbot")
-//@Disabled
+@Disabled
 public class Encoder_Auto_No_Vision extends LinearOpMode {
 
     /* Declare OpMode members. */
