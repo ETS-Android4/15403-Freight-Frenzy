@@ -27,13 +27,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.AutoPrograms;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.babyHardwareMap;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -62,12 +64,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto No Vision", group="Pushbot")
-@Disabled
-public class Encoder_Auto_No_Vision extends LinearOpMode {
+@Autonomous(name="Red B no Vision", group="Pushbot")
+//@Disabled
+public class Red_B_No_Vision extends LinearOpMode {
 
     /* Declare OpMode members. */
-    babyHardwareMap         robot   = new babyHardwareMap();   // Use a Pushbot's hardware
+    babyHardwareMap robot   = new babyHardwareMap();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
@@ -104,60 +106,16 @@ public class Encoder_Auto_No_Vision extends LinearOpMode {
                 robot.rightDrive.getCurrentPosition());
         telemetry.update();
         //drive forward a bit
-        encoderDrive(DRIVE_SPEED,  2,  2, 5.0);
+        encoderDrive(DRIVE_SPEED,  6,  6, 5.0);
         sleep(500);
         //turn right 90 degrees
         encoderDrive(DRIVE_SPEED,  4.5,  -4.5, 5.0);
         sleep(500);
-        //drive backwards to the duck spinner
-        encoderDrive(0.5,  -8.6,  -8.6, 5.0);
-        sleep(500);
-        //spin the motor
-        robot.duckmotor.setPower(-1);
-        sleep(4000);
-        //turn off the motor and drive forwards to line up with the goal
-        robot.duckmotor.setPower(0);
-        encoderDrive(DRIVE_SPEED,  16.5,  16.5, 5.0);
-        sleep(500);
-        //turn left towards the goal 90 degrees
-        encoderDrive(DRIVE_SPEED,  -5,  5, 5.0);
-        sleep(500);
-        //drive towards the goal a bit
-        encoderDrive(DRIVE_SPEED,  5,  5, 5.0);
-        sleep(500);
-        //extend the arm
-        robot.armmotor.setPower(-1);
-        sleep(2500);
-        //stop extending and lower the servo
-        robot.armmotor.setPower(0);
-        robot.armservo.setPosition(0.9);
-        sleep(2200);
-        //raise the servo after the block falls down
-        robot.armservo.setPosition(0.3);
-        sleep(500);
-        //lower the arm
-        robot.armmotor.setPower(1);
-        sleep(2000);
-        //turn right again
-        robot.armmotor.setPower(0);
-        encoderDrive(DRIVE_SPEED,  -4.2,  4.2, 5.0);
-        sleep(500);
-        //drive backwards into the warehouse
-        encoderDrive(DRIVE_SPEED,  -30,  -30, 5.0);
-        sleep(500);
-
+        //drive forwards into the warehouse
+        encoderDrive(DRIVE_SPEED,  24,  24, 5.0);
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
-
-    /*
-     *  Method to perform a relative move, based on encoder counts.
-     *  Encoders are not reset as the move is based on the current position.
-     *  Move will stop if any of three conditions occur:
-     *  1) Move gets to the desired position
-     *  2) Move runs out of time
-     *  3) Driver stops the opmode running.
-     */
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS) {
