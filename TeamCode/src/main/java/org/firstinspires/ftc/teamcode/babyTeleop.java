@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp (name="babyTeleop", group="Pushbot")
+@TeleOp (name="teenageTeleop", group="Pushbot")
 //@Disabled
 public class babyTeleop extends LinearOpMode {
 
@@ -91,8 +91,11 @@ public class babyTeleop extends LinearOpMode {
                 robot.intakeservo.setPosition(CLOSED_POSITION);
             }
 
-            if (gamepad1.a){
+            if (gamepad1.b){
                 robot.duckmotor.setPower(SPIN);
+            }
+            else if (gamepad1.x){
+                robot.duckmotor.setPower(-SPIN);
             }
             else {
                 robot.duckmotor.setPower(0);
