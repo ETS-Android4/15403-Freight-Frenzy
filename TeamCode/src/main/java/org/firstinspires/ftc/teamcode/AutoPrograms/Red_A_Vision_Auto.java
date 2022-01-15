@@ -146,7 +146,7 @@ public class Red_A_Vision_Auto extends Auto_Util {
         //turn left towards the goal 90 degrees
         encoderDrive(DRIVE_SPEED,  -4.5,  4.5, 5.0);
         sleep(500);
-        //if the element is on the right:
+        //if the element is on the right: deliver to top
         if(path == 3){
             //drive towards the goal a bit
             encoderDrive(DRIVE_SPEED,  3.5,  3.5, 5.0);
@@ -190,7 +190,7 @@ public class Red_A_Vision_Auto extends Auto_Util {
             robot.armmotor.setPower(1);
             sleep(1200);
         }
-        //element on the left
+        //element on the left deliver tpo bottom
         else if(path == 1){
             //drive towards the goal a bit
             encoderDrive(DRIVE_SPEED,  3.5,  3.5, 5.0);

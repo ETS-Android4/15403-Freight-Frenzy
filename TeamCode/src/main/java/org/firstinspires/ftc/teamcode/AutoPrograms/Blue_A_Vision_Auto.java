@@ -130,28 +130,36 @@ public class Blue_A_Vision_Auto extends Auto_Util {
         //Drive forward a small amount
         encoderDrive(DRIVE_SPEED,  2,  2, 5.0);
         sleep(500);
-        //Pivot RIGHT 90 degrees
-        encoderDrive(DRIVE_SPEED,  4.5,  -4.5, 5.0);
-        sleep(500);
-        //Drive reverse up to duck motor
-        encoderDrive(0.6,  -6.5,  -6.5, 5.0);
-        sleep(500);
-        //Spin duck motor
-        robot.duckmotor.setPower(-1);
-        sleep(4000);
-        //turn off the motor and drive forwards to line up with the goal
-        robot.duckmotor.setPower(0);
-
-        encoderDrive(DRIVE_SPEED,  16,  16, 5.0);
-        sleep(500);
-        //turn left towards the goal 90 degrees
+        //Pivot LEFT 90 degrees
         encoderDrive(DRIVE_SPEED,  -4.5,  4.5, 5.0);
         sleep(500);
-        //if the element is on the right:
+        //Drive reverse up to duck motor
+        encoderDrive(1,  -6.5,  -6.5, 5.0);
+        sleep(500);
+        //ADD SOME THING TO ACTUALLY SPIN THE CAROSEL
+        encoderDrive(0.5,3,-3,5.0);
+        sleep(200);
+        encoderDrive(0.5,-1,-1,5.0);
+        //Spin duck motor
+        robot.duckmotor.setPower(0.8);
+        sleep(3000);
+        //turn off the motor
+        robot.duckmotor.setPower(0);
+        //reverse the turn made before
+        encoderDrive(0.5,1,1,5.0);
+        sleep(200);
+        encoderDrive(0.5,-3,3,5.0);
+        //drive forwards to line up with the goal
+        encoderDrive(DRIVE_SPEED,  16,  16, 5.0);
+        sleep(300);
+        //turn right towards the goal 90 degrees
+        encoderDrive(DRIVE_SPEED,  4.5,  -4.5, 5.0);
+        sleep(300);
+        //if the element is on the right deliver to top
         if(path == 3){
             //drive towards the goal a bit
             encoderDrive(DRIVE_SPEED,  3.5,  3.5, 5.0);
-            sleep(500);
+            sleep(300);
             //extend the arm
             robot.armmotor.setPower(-1);
             sleep(2500);
@@ -164,19 +172,19 @@ public class Blue_A_Vision_Auto extends Auto_Util {
             sleep(1000);
             //raise the servo after the block falls down
             robot.armservo.setPosition(0.3);
-            sleep(500);
+            sleep(100);
             //lower the arm
             robot.armmotor.setPower(1);
-            sleep(2000);
+            sleep(1000);
         }
-        //element in the middle
+        //element in the middle deposit in middle goal
         else if(path == 2){
             //drive towards the goal a bit
-            encoderDrive(DRIVE_SPEED,  3.5,  3.5, 5.0);
-            sleep(500);
+            encoderDrive(DRIVE_SPEED,  4.5,  4.5, 5.0);
+            sleep(300);
             //extend the arm
             robot.armmotor.setPower(-1);
-            sleep(1300);
+            sleep(1200);
             //stop extending and lower the servo
             robot.armmotor.setPower(0);
             robot.armservo.setPosition(1);
@@ -186,16 +194,16 @@ public class Blue_A_Vision_Auto extends Auto_Util {
             sleep(1000);
             //raise the servo after the block falls down
             robot.armservo.setPosition(0.3);
-            sleep(500);
+            sleep(100);
             //lower the arm
             robot.armmotor.setPower(1);
             sleep(1200);
         }
-        //element on the left
+        //element on the left deliver to bottom goal
         else if(path == 1){
             //drive towards the goal a bit
-            encoderDrive(DRIVE_SPEED,  3.5,  3.5, 5.0);
-            sleep(500);
+            encoderDrive(DRIVE_SPEED,  5,  5, 5.0);
+            sleep(300);
             //extend the arm
             robot.armmotor.setPower(-1);
             sleep(750);
@@ -208,19 +216,17 @@ public class Blue_A_Vision_Auto extends Auto_Util {
             sleep(1000);
             //raise the servo after the block falls down
             robot.armservo.setPosition(0.3);
-            sleep(500);
+            sleep(100);
             //lower the arm
             robot.armmotor.setPower(1);
             sleep(700);
         }
-        //turn right again
+        //turn left again
         robot.armmotor.setPower(0);
-        encoderDrive(DRIVE_SPEED,  -5,  5, 5.0);
-        sleep(500);
+        encoderDrive(DRIVE_SPEED,  5,  -5, 5.0);
+        sleep(300);
         //drive backwards into the warehouse
-        encoderDrive(DRIVE_SPEED,  -30,  -30, 5.0);
-        sleep(500);
-
+        encoderDrive(DRIVE_SPEED,  -25,  -25, 5.0);
 
     }
 

@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="Auto with Vision", group = "Pushbot")
-@Disabled
 public class Auto_Vision extends Auto_Util {
     babyHardwareMap robot = new babyHardwareMap();
     private ElapsedTime runtime = new ElapsedTime();
