@@ -11,7 +11,8 @@ HardwareMap hwmap = null;
     public DcMotor armmotor = null;
     public DcMotor intakemotor = null;
     public Servo armservo = null;
-    public Servo intakeservo = null;
+    public DcMotor spinnermotor=null;
+    //public Servo intakeservo = null;
     public DcMotor duckmotor = null;
     public void init(HardwareMap ahwMap) {
         hwMap = ahwMap;
@@ -21,10 +22,10 @@ HardwareMap hwmap = null;
         intakemotor = HardwareInitMotor("IntakeMotor",true);
         duckmotor = HardwareInitMotor("Duck", true);
         armservo = hwMap.get(Servo.class, "ArmServo");
-        intakeservo = hwMap.get(Servo.class, "IntakeServo");
+        spinnermotor=HardwareInitMotor("spinnerMotor", true);
+        //intakeservo = hwMap.get(Servo.class, "IntakeServo");
         armmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //duckmotor = HardwareInitMotor("Duck", true);
     }
 }

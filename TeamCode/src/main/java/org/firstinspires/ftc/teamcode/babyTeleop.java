@@ -84,11 +84,11 @@ public class babyTeleop extends LinearOpMode {
 
 
             if (gamepad2.right_bumper){
-                robot.intakeservo.setPosition(OPEN_POSITION);
+                robot.spinnermotor.setPower(1);
             }else if (gamepad2.left_bumper){
-                robot.intakeservo.setPosition(CLOSED_POSITION);
-            }else if (gamepad1.right_bumper){
-                robot.intakeservo.setPosition(CLOSED_POSITION);
+                robot.spinnermotor.setPower(-1);
+            }else {
+                robot.spinnermotor.setPower(0);
             }
 
             if (gamepad1.b){
@@ -110,14 +110,14 @@ public class babyTeleop extends LinearOpMode {
                 robot.intakemotor.setPower(0);
             }*/
             //arm position telemetry
-            telemetry.addData("position",robot.intakeservo.getPosition());
+            //telemetry.addData("position",robot.intakeservo.getPosition());
             telemetry.update();
             telemetry.addData("intake pos", robot.intakemotor.getCurrentPosition());
             telemetry.update();
 
             if(gamepad1.dpad_up){
                 robot.intakemotor.setTargetPosition(0);
-                robot.intakeservo.setPosition(OPEN_POSITION);
+                //robot.intakeservo.setPosition(OPEN_POSITION);
             }
         }
 
