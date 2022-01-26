@@ -153,7 +153,7 @@ public class Red_A_Vision_Auto extends Auto_Util {
             sleep(500);
             //extend the arm
             robot.armmotor.setPower(-1);
-            sleep(2500);
+            sleep(1250);
             //stop extending and lower the servo
             robot.armmotor.setPower(0);
             robot.armservo.setPosition(1);
@@ -166,7 +166,7 @@ public class Red_A_Vision_Auto extends Auto_Util {
             sleep(500);
             //lower the arm
             robot.armmotor.setPower(1);
-            sleep(2000);
+            sleep(1000);
         }
         //element in the middle
         else if(path == 2){
@@ -175,7 +175,7 @@ public class Red_A_Vision_Auto extends Auto_Util {
             sleep(500);
             //extend the arm
             robot.armmotor.setPower(-1);
-            sleep(1300);
+            sleep(650);
             //stop extending and lower the servo
             robot.armmotor.setPower(0);
             robot.armservo.setPosition(1);
@@ -188,7 +188,7 @@ public class Red_A_Vision_Auto extends Auto_Util {
             sleep(500);
             //lower the arm
             robot.armmotor.setPower(1);
-            sleep(1200);
+            sleep(600);
         }
         //element on the left deliver tpo bottom
         else if(path == 1){
@@ -197,7 +197,7 @@ public class Red_A_Vision_Auto extends Auto_Util {
             sleep(500);
             //extend the arm
             robot.armmotor.setPower(-1);
-            sleep(750);
+            sleep(375);
             //stop extending and lower the servo
             robot.armmotor.setPower(0);
             robot.armservo.setPosition(1);
@@ -210,7 +210,7 @@ public class Red_A_Vision_Auto extends Auto_Util {
             sleep(500);
             //lower the arm
             robot.armmotor.setPower(1);
-            sleep(700);
+            sleep(350);
         }
         //turn right again
         robot.armmotor.setPower(0);
