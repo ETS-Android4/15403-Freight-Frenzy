@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -23,6 +24,9 @@ public class babyTeleop extends LinearOpMode {
     public void runOpMode() {
         reverseDrive = 1;
         robot.init(hardwareMap);
+        //robot.intakemotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        boolean intakeSetUp = true;
+
         telemetry.addData("Status", "Ready to run");
         telemetry.update();
 
@@ -80,8 +84,51 @@ public class babyTeleop extends LinearOpMode {
             //    robot.intakemotor.setPower(0);
            // }
 
-            robot.intakemotor.setPower(-gamepad2.left_stick_y/4);
+            /*if(gamepad2.dpad_up) {
+                robot.intakemotor.setPower(2/3);
+            }
+            else if(gamepad2.dpad_down) {
+                robot.intakemotor.setPower(-2/3);
+            }
+            else {
+                robot.intakemotor.setPower(0);
+            }*/
 
+            if(gamepad2.dpad_up) {
+                intakeSetUp = true;
+                robot.intakemotor.setPower(1);
+                telemetry.addLine("DPAD UP");
+            }
+            else if(gamepad2.dpad_down) {
+                intakeSetUp = false;
+                robot.intakemotor.setPower(-1);
+                telemetry.addLine("DPAD DOWN");
+            }
+            else {
+                robot.intakemotor.setPower(0);
+            }
+
+            if(intakeSetUp = true) {
+                /*if(robot.intakemotor.getCurrentPosition() > 0) {
+                    robot.intakemotor.setPower(2/3);
+                }
+                else {
+                    robot.intakemotor.setPower(0);
+                }*/
+                //robot.intakemotor.setPower(2/3);
+            }
+            else {
+                /*if(robot.intakemotor.getCurrentPosition() < 380) {
+                    robot.intakemotor.setPower(-2/3);
+                }
+                else {
+                    robot.intakemotor.setPower(0);
+                }*/
+                //robot.intakemotor.setPower(-2/3);
+            }
+            telemetry.addData("Spinner Arm encoder", robot.intakemotor.getCurrentPosition());
+
+            //robot.intakemotor.setPower(gamepad2.left_stick_y*2/3);
 
             if (gamepad2.right_bumper){
                 robot.spinnermotor.setPower(1);
@@ -112,13 +159,11 @@ public class babyTeleop extends LinearOpMode {
             //arm position telemetry
             //telemetry.addData("position",robot.intakeservo.getPosition());
             telemetry.update();
-            telemetry.addData("intake pos", robot.intakemotor.getCurrentPosition());
-            telemetry.update();
 
-            if(gamepad1.dpad_up){
+            /*if(gamepad1.dpad_up){
                 robot.intakemotor.setTargetPosition(0);
                 //robot.intakeservo.setPosition(OPEN_POSITION);
-            }
+            }*/
         }
 
 

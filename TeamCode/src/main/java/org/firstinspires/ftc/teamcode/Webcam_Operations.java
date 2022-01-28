@@ -238,8 +238,8 @@ public class Webcam_Operations extends LinearOpMode {
             int maxR = red(maxRed);
             int maxG = green(maxRed);
             int maxB = blue(maxRed);
-            for(int i = 1; i < frameMap.getHeight(); i++) {
-                for(int j = 1; j < frameMap.getWidth(); j++) {
+            for(int i = 1; i < frameMap.getHeight() - 1; i += 2) {
+                for(int j = 1; j < frameMap.getWidth() - 1; j += 2) {
                     int curPixel = frameMap.getPixel(j, i);
                     int pR = red(curPixel);
                     int pG = green(curPixel);
@@ -261,8 +261,8 @@ public class Webcam_Operations extends LinearOpMode {
             int maxR = red(maxBlue);
             int maxG = green(maxBlue);
             int maxB = blue(maxBlue);
-            for(int i = 1; i < frameMap.getHeight(); i++) {
-                for(int j = 1; j < frameMap.getWidth(); j++) {
+            for(int i = 1; i < frameMap.getHeight() - 1; i += 2) {
+                for(int j = 1; j < frameMap.getWidth() - 1; j += 2) {
                     int curPixel = frameMap.getPixel(j, i);
                     int pR = red(curPixel);
                     int pG = green(curPixel);
@@ -289,8 +289,8 @@ public class Webcam_Operations extends LinearOpMode {
             int maxR = red(maxYellow);
             int maxG = green(maxYellow);
             int maxB = blue(maxYellow);
-            for(int i = 1; i < frameMap.getHeight(); i++) {
-                for(int j = 1; j < frameMap.getWidth(); j++) {
+            for(int i = 1; i < frameMap.getHeight() - 1; i += 2) {
+                for(int j = 1; j < frameMap.getWidth() - 1; j += 2) {
                     int curPixel = frameMap.getPixel(j, i);
                     int pR = red(curPixel);
                     int pG = green(curPixel);
