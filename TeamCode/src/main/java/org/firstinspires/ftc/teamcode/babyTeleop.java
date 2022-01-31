@@ -74,57 +74,28 @@ public class babyTeleop extends LinearOpMode {
             telemetry.addData("left drive encoder", robot.leftDrive.getCurrentPosition());
             telemetry.addData("right drive encoder", robot.rightDrive.getCurrentPosition());
 
-
-           /* else {
-                robot.armservo.setPosition(10);
-
-            }*/
-            //===========
-           // if(robot.intakemotor.getCurrentPosition()<=(-700)){
-            //    robot.intakemotor.setPower(0);
-           // }
-
-            /*if(gamepad2.dpad_up) {
-                robot.intakemotor.setPower(2/3);
-            }
-            else if(gamepad2.dpad_down) {
-                robot.intakemotor.setPower(-2/3);
-            }
-            else {
-                robot.intakemotor.setPower(0);
-            }*/
-
             if(gamepad2.dpad_up) {
                 intakeSetUp = true;
-                robot.intakemotor.setPower(1);
-                telemetry.addLine("DPAD UP");
             }
             else if(gamepad2.dpad_down) {
                 intakeSetUp = false;
-                robot.intakemotor.setPower(-1);
-                telemetry.addLine("DPAD DOWN");
-            }
-            else {
-                robot.intakemotor.setPower(0);
             }
 
             if(intakeSetUp = true) {
-                /*if(robot.intakemotor.getCurrentPosition() > 0) {
+                if(robot.intakemotor.getCurrentPosition() > 0) {
                     robot.intakemotor.setPower(2/3);
                 }
                 else {
                     robot.intakemotor.setPower(0);
-                }*/
-                //robot.intakemotor.setPower(2/3);
+                }
             }
             else {
-                /*if(robot.intakemotor.getCurrentPosition() < 380) {
-                    robot.intakemotor.setPower(-2/3);
+                if(robot.intakemotor.getCurrentPosition() < 380) {
+                    robot.intakemotor.setPower(.25);
                 }
                 else {
                     robot.intakemotor.setPower(0);
-                }*/
-                //robot.intakemotor.setPower(-2/3);
+                }
             }
             telemetry.addData("Spinner Arm encoder", robot.intakemotor.getCurrentPosition());
 
