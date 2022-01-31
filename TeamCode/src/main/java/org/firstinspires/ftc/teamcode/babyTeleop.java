@@ -26,6 +26,7 @@ public class babyTeleop extends LinearOpMode {
         robot.init(hardwareMap);
         //robot.intakemotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         boolean intakeSetUp = true;
+        boolean armExtendedUp = false;
 
         telemetry.addData("Status", "Ready to run");
         telemetry.update();
@@ -63,6 +64,34 @@ public class babyTeleop extends LinearOpMode {
             } else {
                 robot.armmotor.setPower(0);     //Stop Moving (Brake)
             }
+            telemetry.addData("Arm Extension", robot.armmotor.getCurrentPosition());
+
+            //Arm auto extension to top
+            if(gamepad2.b) {
+                armExtendedUp = true;
+            }
+            else if(gamepad2.a) {
+                armExtendedUp = false;
+            }
+
+            if(armExtendedUp == true) {
+                if(robot.intakemotor.getCurrentPosition() > 10) {
+                    robot.intakemotor.setPower(-1);
+                }
+                else {
+                    robot.intakemotor.setPower(0);
+                }
+            }
+            else {
+                if(robot.intakemotor.getCurrentPosition() < 3850) {
+                    robot.intakemotor.setPower(1);
+                }
+                else {
+                    robot.intakemotor.setPower(0);
+                }
+            }
+
+
             //Controls for the servo (Gate) that deposits a game element into a hub
             if (gamepad2.x){
                 robot.armservo.setPosition(DOWN_POSITION);  //Drop gate
@@ -81,9 +110,9 @@ public class babyTeleop extends LinearOpMode {
                 intakeSetUp = false;
             }
 
-            if(intakeSetUp = true) {
-                if(robot.intakemotor.getCurrentPosition() > 0) {
-                    robot.intakemotor.setPower(2/3);
+            if(intakeSetUp == true) {
+                if(robot.intakemotor.getCurrentPosition() > 10) {
+                    robot.intakemotor.setPower(-0.7);
                 }
                 else {
                     robot.intakemotor.setPower(0);
@@ -91,13 +120,13 @@ public class babyTeleop extends LinearOpMode {
             }
             else {
                 if(robot.intakemotor.getCurrentPosition() < 380) {
-                    robot.intakemotor.setPower(.25);
+                    robot.intakemotor.setPower(0.25);
                 }
                 else {
                     robot.intakemotor.setPower(0);
                 }
             }
-            telemetry.addData("Spinner Arm encoder", robot.intakemotor.getCurrentPosition());
+            //telemetry.addData("Spinner Arm encoder", robot.intakemotor.getCurrentPosition());
 
             //robot.intakemotor.setPower(gamepad2.left_stick_y*2/3);
 
