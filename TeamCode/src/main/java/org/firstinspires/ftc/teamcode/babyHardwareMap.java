@@ -27,6 +27,7 @@ HardwareMap hwmap = null;
         armmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intakemotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //intakemotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 }

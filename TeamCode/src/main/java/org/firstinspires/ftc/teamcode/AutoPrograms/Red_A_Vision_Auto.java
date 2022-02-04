@@ -50,6 +50,8 @@ public class Red_A_Vision_Auto extends Auto_Util {
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double DRIVE_SPEED = 1;
     static final double TURN_SPEED = 0.6;
+    public static final double UP_POSITION = .5;
+    public static final double DOWN_POSITION = 1;
 
     int maxAll = getColorInt(255, 255, 255, 255);
     int minAll = getColorInt(255, 0, 0, 0);
@@ -125,6 +127,8 @@ public class Red_A_Vision_Auto extends Auto_Util {
         telemetry.update();
         sleep(200); //Sleep to quickly display chosen path before proceeding
 
+        robot.intakemotor.setPower(-1);
+
         //==================== Start moving
         //Drive forward a small amount
         encoderDrive(DRIVE_SPEED,  2,  2, 5.0);
@@ -133,7 +137,7 @@ public class Red_A_Vision_Auto extends Auto_Util {
         encoderDrive(DRIVE_SPEED,  4.5,  -4.5, 5.0);
         sleep(500);
         //Drive reverse up to duck motor
-        encoderDrive(0.6,  -6.5,  -6.5, 5.0);
+        encoderDrive(0.6,  -7,  -7, 5.0);
         sleep(500);
         //Spin duck motor
         robot.duckmotor.setPower(-1);
@@ -153,20 +157,20 @@ public class Red_A_Vision_Auto extends Auto_Util {
             sleep(500);
             //extend the arm
             robot.armmotor.setPower(-1);
-            sleep(1250);
+            sleep(1550);
             //stop extending and lower the servo
             robot.armmotor.setPower(0);
-            robot.armservo.setPosition(1);
+            robot.armservo.setPosition(DOWN_POSITION);
             //drive backwards to shake out block
             sleep(1000);
             encoderDrive(DRIVE_SPEED,-1,-1,5);
             sleep(1000);
             //raise the servo after the block falls down
-            robot.armservo.setPosition(0.3);
+            robot.armservo.setPosition(UP_POSITION);
             sleep(500);
             //lower the arm
             robot.armmotor.setPower(1);
-            sleep(1000);
+            sleep(1400);
         }
         //element in the middle
         else if(path == 2){
@@ -175,7 +179,7 @@ public class Red_A_Vision_Auto extends Auto_Util {
             sleep(500);
             //extend the arm
             robot.armmotor.setPower(-1);
-            sleep(650);
+            sleep(1050);
             //stop extending and lower the servo
             robot.armmotor.setPower(0);
             robot.armservo.setPosition(1);
@@ -188,16 +192,16 @@ public class Red_A_Vision_Auto extends Auto_Util {
             sleep(500);
             //lower the arm
             robot.armmotor.setPower(1);
-            sleep(600);
+            sleep(1000);
         }
-        //element on the left deliver tpo bottom
+        //element on the left deliver to bottom
         else if(path == 1){
             //drive towards the goal a bit
-            encoderDrive(DRIVE_SPEED,  3.5,  3.5, 5.0);
+            encoderDrive(DRIVE_SPEED,  5.5,  5.5, 5.0);
             sleep(500);
             //extend the arm
             robot.armmotor.setPower(-1);
-            sleep(375);
+            sleep(300);
             //stop extending and lower the servo
             robot.armmotor.setPower(0);
             robot.armservo.setPosition(1);
@@ -210,7 +214,7 @@ public class Red_A_Vision_Auto extends Auto_Util {
             sleep(500);
             //lower the arm
             robot.armmotor.setPower(1);
-            sleep(350);
+            sleep(275);
         }
         //turn right again
         robot.armmotor.setPower(0);

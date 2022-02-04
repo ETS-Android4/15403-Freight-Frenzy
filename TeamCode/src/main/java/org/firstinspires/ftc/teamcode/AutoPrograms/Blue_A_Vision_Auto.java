@@ -51,6 +51,9 @@ public class Blue_A_Vision_Auto extends Auto_Util {
     static final double DRIVE_SPEED = 1;
     static final double TURN_SPEED = 0.6;
 
+    public static final double UP_POSITION = .5;
+    public static final double DOWN_POSITION = 1;
+
     int maxAll = getColorInt(255, 255, 255, 255);
     int minAll = getColorInt(255, 0, 0, 0);
     int maxRed = getColorInt(255, 255, 150, 150);
@@ -134,7 +137,7 @@ public class Blue_A_Vision_Auto extends Auto_Util {
         encoderDrive(DRIVE_SPEED,  -4.5,  4.5, 5.0);
         sleep(500);
         //Drive reverse up to duck motor
-        encoderDrive(1,  -6.5,  -6.5, 5.0);
+        encoderDrive(1,  -7,  -7, 5.0);
         sleep(500);
         //ADD SOME THING TO ACTUALLY SPIN THE CAROSEL
         encoderDrive(0.5,3,-3,5.0);
@@ -159,32 +162,32 @@ public class Blue_A_Vision_Auto extends Auto_Util {
         if(path == 3){
             //drive towards the goal a bit
             encoderDrive(DRIVE_SPEED,  3.5,  3.5, 5.0);
-            sleep(300);
+            sleep(500);
             //extend the arm
             robot.armmotor.setPower(-1);
-            sleep(2500);
+            sleep(1550);
             //stop extending and lower the servo
             robot.armmotor.setPower(0);
-            robot.armservo.setPosition(1);
+            robot.armservo.setPosition(DOWN_POSITION);
             //drive backwards to shake out block
             sleep(1000);
             encoderDrive(DRIVE_SPEED,-1,-1,5);
             sleep(1000);
             //raise the servo after the block falls down
-            robot.armservo.setPosition(0.3);
-            sleep(100);
+            robot.armservo.setPosition(UP_POSITION);
+            sleep(500);
             //lower the arm
             robot.armmotor.setPower(1);
-            sleep(1000);
+            sleep(1400);
         }
-        //element in the middle deposit in middle goal
+        //element in the middle
         else if(path == 2){
             //drive towards the goal a bit
-            encoderDrive(DRIVE_SPEED,  4.5,  4.5, 5.0);
-            sleep(300);
+            encoderDrive(DRIVE_SPEED,  3.5,  3.5, 5.0);
+            sleep(500);
             //extend the arm
             robot.armmotor.setPower(-1);
-            sleep(1200);
+            sleep(1050);
             //stop extending and lower the servo
             robot.armmotor.setPower(0);
             robot.armservo.setPosition(1);
@@ -194,19 +197,19 @@ public class Blue_A_Vision_Auto extends Auto_Util {
             sleep(1000);
             //raise the servo after the block falls down
             robot.armservo.setPosition(0.3);
-            sleep(100);
+            sleep(500);
             //lower the arm
             robot.armmotor.setPower(1);
-            sleep(1200);
+            sleep(1000);
         }
-        //element on the left deliver to bottom goal
+        //element on the left deliver to bottom
         else if(path == 1){
             //drive towards the goal a bit
-            encoderDrive(DRIVE_SPEED,  5,  5, 5.0);
-            sleep(300);
+            encoderDrive(DRIVE_SPEED,  5.5,  5.5, 5.0);
+            sleep(500);
             //extend the arm
             robot.armmotor.setPower(-1);
-            sleep(750);
+            sleep(300);
             //stop extending and lower the servo
             robot.armmotor.setPower(0);
             robot.armservo.setPosition(1);
@@ -216,10 +219,10 @@ public class Blue_A_Vision_Auto extends Auto_Util {
             sleep(1000);
             //raise the servo after the block falls down
             robot.armservo.setPosition(0.3);
-            sleep(100);
+            sleep(500);
             //lower the arm
             robot.armmotor.setPower(1);
-            sleep(700);
+            sleep(275);
         }
         //turn left again
         robot.armmotor.setPower(0);
