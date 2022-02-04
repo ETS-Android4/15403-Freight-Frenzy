@@ -28,6 +28,8 @@ public class babyTeleop extends LinearOpMode {
         boolean intakeSetUp = true;
         int armExtendUp = 1;
         //1 for down, 2 for up, 0 for manual
+        int intakeDownEncoder = robot.intakemotor.getCurrentPosition();
+        int intakeEncoderDifference = 0;
 
         telemetry.addData("Status", "Ready to run");
         telemetry.update();
@@ -118,6 +120,16 @@ public class babyTeleop extends LinearOpMode {
             telemetry.addData("left drive encoder", robot.leftDrive.getCurrentPosition());
             telemetry.addData("right drive encoder", robot.rightDrive.getCurrentPosition());
 
+            if(gamepad2.dpad_left) {
+                robot.intakemotor.setPower(0.25);
+                sleep(500);
+                intakeDownEncoder = robot.intakemotor.getCurrentPosition();
+                intakeSetUp = false;
+            }
+
+            intakeEncoderDifference = intakeDownEncoder - robot.intakemotor.getCurrentPosition();
+            telemetry.addData("Intake Encoder Diff", intakeEncoderDifference);
+
             if(gamepad2.dpad_up) {          //If
                 intakeSetUp = true;
             }
@@ -126,10 +138,10 @@ public class babyTeleop extends LinearOpMode {
             }
 
             if(intakeSetUp == true) {
-                if(robot.intakemotor.getCurrentPosition() > 10) {
+                if(intakeEncoderDifference < 380) {
                     robot.intakemotor.setPower(-0.7);
                 }
-                else if(robot.intakemotor.getCurrentPosition() > 0) {
+                else if(intakeEncoderDifference < 420) {
                     robot.intakemotor.setPower(-0.1);
                 }
                 else {
@@ -137,7 +149,7 @@ public class babyTeleop extends LinearOpMode {
                 }
             }
             else {
-                if(robot.intakemotor.getCurrentPosition() < 380) {
+                if(intakeEncoderDifference > 20) {
                     robot.intakemotor.setPower(0.25);
                 }
                 else {
