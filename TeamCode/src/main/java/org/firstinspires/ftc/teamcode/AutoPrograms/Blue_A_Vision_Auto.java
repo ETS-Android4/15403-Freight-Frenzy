@@ -129,6 +129,8 @@ public class Blue_A_Vision_Auto extends Auto_Util {
         telemetry.update();
         sleep(200); //Sleep to quickly display chosen path before proceeding
 
+        robot.intakemotor.setPower(-1);
+
         //==================== Start moving
         //Drive forward a small amount
         encoderDrive(DRIVE_SPEED,  2,  2, 5.0);
@@ -137,7 +139,7 @@ public class Blue_A_Vision_Auto extends Auto_Util {
         encoderDrive(DRIVE_SPEED,  -4.5,  4.5, 5.0);
         sleep(500);
         //Drive reverse up to duck motor
-        encoderDrive(1,  -7,  -7, 5.0);
+        encoderDrive(0.5,  -6.5,  -6.5, 5.0);
         sleep(500);
         //ADD SOME THING TO ACTUALLY SPIN THE CAROSEL
         encoderDrive(0.5,3,-3,5.0);
@@ -153,7 +155,7 @@ public class Blue_A_Vision_Auto extends Auto_Util {
         sleep(200);
         encoderDrive(0.5,-3,3,5.0);
         //drive forwards to line up with the goal
-        encoderDrive(DRIVE_SPEED,  16,  16, 5.0);
+        encoderDrive(DRIVE_SPEED,  15.5,  15.5, 5.0);
         sleep(300);
         //turn right towards the goal 90 degrees
         encoderDrive(DRIVE_SPEED,  4.5,  -4.5, 5.0);
@@ -161,11 +163,11 @@ public class Blue_A_Vision_Auto extends Auto_Util {
         //if the element is on the right deliver to top
         if(path == 3){
             //drive towards the goal a bit
-            encoderDrive(DRIVE_SPEED,  3.5,  3.5, 5.0);
+            encoderDrive(DRIVE_SPEED,  2.5,  2.5, 5.0);
             sleep(500);
             //extend the arm
             robot.armmotor.setPower(-1);
-            sleep(1550);
+            sleep(1850);
             //stop extending and lower the servo
             robot.armmotor.setPower(0);
             robot.armservo.setPosition(DOWN_POSITION);
@@ -178,7 +180,7 @@ public class Blue_A_Vision_Auto extends Auto_Util {
             sleep(500);
             //lower the arm
             robot.armmotor.setPower(1);
-            sleep(1400);
+            sleep(1600);
         }
         //element in the middle
         else if(path == 2){
@@ -226,7 +228,7 @@ public class Blue_A_Vision_Auto extends Auto_Util {
         }
         //turn left again
         robot.armmotor.setPower(0);
-        encoderDrive(DRIVE_SPEED,  5,  -5, 5.0);
+        encoderDrive(DRIVE_SPEED,  5.5,  -5.5, 5.0);
         sleep(300);
         //drive backwards into the warehouse
         encoderDrive(DRIVE_SPEED,  -25,  -25, 5.0);

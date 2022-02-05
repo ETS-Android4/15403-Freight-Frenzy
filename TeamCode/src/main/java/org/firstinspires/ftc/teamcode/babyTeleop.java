@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp (name="teenageTeleop", group="Pushbot")
+@TeleOp (name="adultTeleop", group="Pushbot")
 //@Disabled
 public class babyTeleop extends LinearOpMode {
 
