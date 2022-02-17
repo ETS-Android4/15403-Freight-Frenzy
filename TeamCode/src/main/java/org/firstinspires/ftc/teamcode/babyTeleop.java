@@ -14,6 +14,8 @@ public class babyTeleop extends LinearOpMode {
     public static final double DOWN_POSITION = 1;
     public static final double OPEN_POSITION = .9;
     public static final double CLOSED_POSITION = .3;
+    public static final double INLET_UP = 1;
+    public static final double INLET_DOWN = 0.6;
     static final double SPIN = -1;
 
     babyHardwareMap robot = new babyHardwareMap();
@@ -108,6 +110,13 @@ public class babyTeleop extends LinearOpMode {
                 }
             }
 
+            if(robot.armmotor.getCurrentPosition() > 200) {
+                robot.inletdoor.setPosition(INLET_UP);
+            }
+            else{
+                robot.inletdoor.setPosition(INLET_DOWN);
+                robot.armservo.setPosition(UP_POSITION);
+            }
 
             //Controls for the servo (Gate) that deposits a game element into a hub
             if (gamepad2.x){
