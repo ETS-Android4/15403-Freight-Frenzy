@@ -94,6 +94,7 @@ public class babyTeleop extends LinearOpMode {
             }
 
             if(armExtendUp == 1) {
+                robot.armservo.setPosition(UP_POSITION);
                 if(robot.armmotor.getCurrentPosition() > 20) {
                     robot.armmotor.setPower(-1);
                 }
@@ -102,7 +103,7 @@ public class babyTeleop extends LinearOpMode {
                 }
             }
             else if(armExtendUp == 2){
-                if(robot.armmotor.getCurrentPosition() < 3500) {
+                if(robot.armmotor.getCurrentPosition() < 3800) {
                     robot.armmotor.setPower(1);
                 }
                 else {
@@ -115,7 +116,6 @@ public class babyTeleop extends LinearOpMode {
             }
             else{
                 robot.inletdoor.setPosition(INLET_DOWN);
-                robot.armservo.setPosition(UP_POSITION);
             }
 
             //Controls for the servo (Gate) that deposits a game element into a hub
