@@ -38,8 +38,8 @@ import org.firstinspires.ftc.teamcode.babyHardwareMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-@Autonomous(name="Blue A Vision Auto", group = "Pushbot")
-public class Blue_A_Vision_Auto extends Auto_Util {
+@Autonomous(name="Red Just Duck", group = "Pushbot")
+public class Red_JustDuck extends Auto_Util {
     babyHardwareMap robot = new babyHardwareMap();
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -50,7 +50,6 @@ public class Blue_A_Vision_Auto extends Auto_Util {
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double DRIVE_SPEED = 1;
     static final double TURN_SPEED = 0.6;
-
     public static final double UP_POSITION = .5;
     public static final double DOWN_POSITION = 1;
 
@@ -63,12 +62,11 @@ public class Blue_A_Vision_Auto extends Auto_Util {
     int maxCap = getColorInt(255, 92, 255, 228);
     int minCap = getColorInt(255, 25, 181, 155);
     int maxYellow = getColorInt(255, 255, 255, 100);
-    int minYellow = getColorInt(255, 130, 130, 0);
+    int minYellow = getColorInt(255, 180, 180, 0);
 
     public static final int RED = 1;
     public static final int BLUE = 2;
     public static final int CAP = 3;
-    public static final int YELLOW = 4;
 
 
 
@@ -121,11 +119,11 @@ public class Blue_A_Vision_Auto extends Auto_Util {
         //======================== Start of Auto
 
         //Vision code to determine path at beginning of match
-        int path = 0;
+        /*int path = 0;
         bmp = getBarcodeBitmap();       //Get a bitmap (Pixel Array) from Camera
         telemetry.addLine("Auto program has bitmap");
-        path = barcodeValue(bmp, YELLOW);  //Decide on a path while on RED side of field from bitmap
-        telemetry.addLine("Proceeding with Path: " + path);
+        path = barcodeValue(bmp, RED);  //Decide on a path while on RED side of field from bitmap
+        telemetry.addLine("Proceeding with Path: " + path);*/
         telemetry.update();
         sleep(200); //Sleep to quickly display chosen path before proceeding
 
@@ -135,39 +133,32 @@ public class Blue_A_Vision_Auto extends Auto_Util {
         //Drive forward a small amount
         encoderDrive(DRIVE_SPEED,  2,  2, 5.0);
         sleep(500);
-        //Pivot LEFT 90 degrees
-        encoderDrive(DRIVE_SPEED,  -4.5,  4.5, 5.0);
+        //Pivot RIGHT 90 degrees
+        encoderDrive(DRIVE_SPEED,  4.5,  -4.5, 5.0);
         sleep(500);
         //Drive reverse up to duck motor
-        encoderDrive(0.5,  -6.5,  -6.5, 5.0);
+        encoderDrive(0.6,  -7,  -7, 5.0);
         sleep(500);
-        //ADD SOME THING TO ACTUALLY SPIN THE CAROSEL
-        encoderDrive(0.5,3,-3,5.0);
-        sleep(200);
-        encoderDrive(0.5,-1,-1,5.0);
         //Spin duck motor
-        robot.duckmotor.setPower(0.8);
-        sleep(3000);
-        //turn off the motor
+        robot.duckmotor.setPower(-1);
+        sleep(4000);
+        //turn off the motor and drive forwards to line up with the goal
         robot.duckmotor.setPower(0);
-        //reverse the turn made before
-        encoderDrive(0.5,1,1,5.0);
-        sleep(200);
-        encoderDrive(0.5,-3,3,5.0);
-        //drive forwards to line up with the goal
-        encoderDrive(DRIVE_SPEED,  15.5,  15.5, 5.0);
-        sleep(300);
-        //turn right towards the goal 90 degrees
-        encoderDrive(DRIVE_SPEED,  4.5,  -4.5, 5.0);
-        sleep(300);
-        //if the element is on the right deliver to top
+        encoderDrive(DRIVE_SPEED, 2, 2, 5);
+        //turn left towards the goal 90 degrees
+        encoderDrive(DRIVE_SPEED,  -4.5,  4.5, 5.0);
+        encoderDrive(DRIVE_SPEED, -2, 2, 5);
+        sleep(500);
+        encoderDrive(DRIVE_SPEED, 7.5, 7.5, 5);
+        /*
+        //if the element is on the right: deliver to top
         if(path == 3){
             //drive towards the goal a bit
-            encoderDrive(DRIVE_SPEED,  1.8,  1.8, 5.0);
+            encoderDrive(DRIVE_SPEED,  3.5,  3.5, 5.0);
             sleep(500);
             //extend the arm
             robot.armmotor.setPower(-1);
-            sleep(1850);
+            sleep(1550);
             //stop extending and lower the servo
             robot.armmotor.setPower(0);
             robot.armservo.setPosition(DOWN_POSITION);
@@ -180,12 +171,12 @@ public class Blue_A_Vision_Auto extends Auto_Util {
             sleep(500);
             //lower the arm
             robot.armmotor.setPower(1);
-            sleep(1600);
+            sleep(1400);
         }
         //element in the middle
         else if(path == 2){
             //drive towards the goal a bit
-            encoderDrive(DRIVE_SPEED,  3,  3, 5.0);
+            encoderDrive(DRIVE_SPEED,  3.5,  3.5, 5.0);
             sleep(500);
             //extend the arm
             robot.armmotor.setPower(-1);
@@ -195,7 +186,7 @@ public class Blue_A_Vision_Auto extends Auto_Util {
             robot.armservo.setPosition(1);
             //drive backwards to shake out block
             sleep(1000);
-            encoderDrive(0.4,-1.2,-1.2,5);
+            encoderDrive(0.7,-1,-   1,5);
             sleep(1000);
             //raise the servo after the block falls down
             robot.armservo.setPosition(0.3);
@@ -207,7 +198,7 @@ public class Blue_A_Vision_Auto extends Auto_Util {
         //element on the left deliver to bottom
         else if(path == 1){
             //drive towards the goal a bit
-            encoderDrive(DRIVE_SPEED,  4,  4, 5.0);
+            encoderDrive(DRIVE_SPEED,  5.5,  5.5, 5.0);
             sleep(500);
             //extend the arm
             robot.armmotor.setPower(-1);
@@ -217,8 +208,8 @@ public class Blue_A_Vision_Auto extends Auto_Util {
             robot.armservo.setPosition(1);
             //drive backwards to shake out block
             sleep(1000);
-            encoderDrive(0.4,-.5,-.5,5);
-            sleep(700);
+            encoderDrive(0.7,-1,-1,5);
+            sleep(1000);
             //raise the servo after the block falls down
             robot.armservo.setPosition(0.3);
             sleep(500);
@@ -226,12 +217,14 @@ public class Blue_A_Vision_Auto extends Auto_Util {
             robot.armmotor.setPower(1);
             sleep(275);
         }
-        //turn left again
+        //turn right again
         robot.armmotor.setPower(0);
-        encoderDrive(DRIVE_SPEED,  4.2,  -4.2, 5.0);
-        sleep(300);
+        encoderDrive(DRIVE_SPEED,  -5,  5, 5.0);
+        sleep(500);
         //drive backwards into the warehouse
-        encoderDrive(DRIVE_SPEED,  -25,  -25, 5.0);
+        encoderDrive(DRIVE_SPEED,  -30,  -30, 5.0);
+        sleep(500);
+*/
 
     }
 
@@ -365,24 +358,19 @@ public class Blue_A_Vision_Auto extends Auto_Util {
         telemetry.update();
         telemetry.addLine("A_Pixels: " + aPixels);
         telemetry.addLine("B_Pixels: " + bPixels);
-        telemetry.update();
-        sleep(200);
-        /*if(useTwoRegions) {
+        if(useTwoRegions) {
             telemetry.addLine("Total Pixels (c): " + cPixels);
         }
         else {
             telemetry.addLine("C_Pixels: " + cPixels);
         }
-        telemetry.update();*/
+        telemetry.update();
         //    sleep(10000);
-        int thresh = 500;
-        if(targetColor == RED) { thresh = 500; }
-        else if(targetColor == YELLOW) { thresh = 2; }
         if(useTwoRegions == true) {
-            if(aPixels > thresh && aPixels > bPixels) {
+            if(aPixels < 500 && aPixels < bPixels) {
                 return 2;
             }
-            else if(bPixels > thresh && bPixels > aPixels) {
+            else if(bPixels < 500 && bPixels < aPixels) {
                 return 3;
             }
             else {
@@ -410,15 +398,15 @@ public class Blue_A_Vision_Auto extends Auto_Util {
 
     public int newPixelsColorCount(Bitmap frameMap, int color) {
         int pixelCount = 0;
-        if(color == RED) {//RED
+        if(color == 1) {//RED
             int minR = red(minRed);
             int minG = green(minRed);
             int minB = blue(minRed);
             int maxR = red(maxRed);
             int maxG = green(maxRed);
             int maxB = blue(maxRed);
-            for(int i = 1; i < frameMap.getHeight(); i++) {
-                for(int j = 1; j < frameMap.getWidth(); j++) {
+            for(int i = 1; i < frameMap.getHeight() - 1; i += 2) {
+                for(int j = 1; j < frameMap.getWidth() - 1; j += 2) {
                     int curPixel = frameMap.getPixel(j, i);
                     int pR = red(curPixel);
                     int pG = green(curPixel);
@@ -433,15 +421,15 @@ public class Blue_A_Vision_Auto extends Auto_Util {
                 }
             }
         }
-        else if(color == BLUE) {//BLUE
+        else if(color == 2) {//BLUE
             int minR = red(minBlue);
             int minG = green(minBlue);
             int minB = blue(minBlue);
             int maxR = red(maxBlue);
             int maxG = green(maxBlue);
             int maxB = blue(maxBlue);
-            for(int i = 1; i < frameMap.getHeight(); i++) {
-                for(int j = 1; j < frameMap.getWidth(); j++) {
+            for(int i = 1; i < frameMap.getHeight() - 1; i += 2) {
+                for(int j = 1; j < frameMap.getWidth() - 1; j += 2) {
                     int curPixel = frameMap.getPixel(j, i);
                     int pR = red(curPixel);
                     int pG = green(curPixel);
@@ -458,70 +446,15 @@ public class Blue_A_Vision_Auto extends Auto_Util {
                 }
             }
         }
-        else if(color == CAP) {//CAP
+        else if(color == 3) {//CAP
 
-        }
-        else if(color == YELLOW) {//YELLOW
-            int minR = red(minYellow);
-            int minG = green(minYellow);
-            int minB = blue(minYellow);
-            int maxR = red(maxYellow);
-            int maxG = green(maxYellow);
-            int maxB = blue(maxYellow);
-            for(int i = 1; i < frameMap.getHeight(); i++) {
-                for(int j = 1; j < frameMap.getWidth(); j++) {
-                    int curPixel = frameMap.getPixel(j, i);
-                    int pR = red(curPixel);
-                    int pG = green(curPixel);
-                    int pB = blue(curPixel);
-                    if(pR >= minR && pR <= maxR) {
-                        if(pG >= minG && pG <= maxG) {
-                            if(pB >= minB && pB <= maxB && 20 + (pB * 2) < pR + pG) {
-                                pixelCount++;
-                            }
-                        }
-                    }
-                }
-            }
         }
         //telemetry.addLine("Color Values retrieved. Proceeding to count pixels...");
         //int pix = frameMap.getPixel(320, 240);
         //telemetry.addLine("Pixel RGB: " + red(pix) + " / " + blue(pix) + " / " + green(pix));
-        //telemetry.addLine("Pixels counted: " + pixelCount);
-        //telemetry.update();
-        //sleep(10000);
-        return pixelCount;
-    }
-
-    public int pixelsColor(Bitmap frameMap, int colorMin, int colorMax) {
-        int pixelCount = 0;
-        int minR = red(colorMin);
-        int minG = green(colorMin);
-        int minB = blue(colorMin);
-        int maxR = red(colorMax);
-        int maxG = green(colorMax);
-        int maxB = blue(colorMax);
-        //telemetry.addLine("Color Values retrieved. Proceeding to count pixels...");
-        for(int i = 1; i < frameMap.getHeight(); i++) {
-            for(int j = 1; j < frameMap.getWidth(); j++) {
-                int curPixel = frameMap.getPixel(j, i);
-                int pR = red(curPixel);
-                int pG = green(curPixel);
-                int pB = blue(curPixel);
-                if(pR >= minR && pR <= maxR) {
-                    if(pG >= minG && pG <= maxG) {
-                        if(pB >= minB && pB <= maxB) {
-                            pixelCount++;
-                        }
-                    }
-                }
-            }
-        }
-        int pix = frameMap.getPixel(320, 240);
-        telemetry.addLine("Pixel RGB: " + red(pix) + " / " + blue(pix) + " / " + green(pix));
         telemetry.addLine("Pixels counted: " + pixelCount);
         telemetry.update();
-        sleep(10000);
+        //sleep(10000);
         return pixelCount;
     }
 
@@ -640,7 +573,7 @@ public class Blue_A_Vision_Auto extends Auto_Util {
                                 })
                         );
                         synchronizer.finish(session);
-                    } catch (CameraException|RuntimeException e) {
+                    } catch (CameraException |RuntimeException e) {
                         RobotLog.ee(TAG, e, "exception starting capture");
                         error("exception starting capture");
                         session.close();

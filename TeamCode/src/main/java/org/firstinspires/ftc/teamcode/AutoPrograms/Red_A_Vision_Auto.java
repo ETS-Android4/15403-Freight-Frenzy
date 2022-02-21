@@ -163,11 +163,11 @@ public class Red_A_Vision_Auto extends Auto_Util {
             robot.armservo.setPosition(DOWN_POSITION);
             //drive backwards to shake out block
             sleep(1000);
-            encoderDrive(DRIVE_SPEED,-1,-1,5);
+            encoderDrive(.1,-1,-1,5);
             sleep(1000);
             //raise the servo after the block falls down
-            robot.armservo.setPosition(UP_POSITION);
-            sleep(500);
+            /*robot.armservo.setPosition(UP_POSITION);
+            sleep(500);*/
             //lower the arm
             robot.armmotor.setPower(1);
             sleep(1400);
@@ -185,11 +185,11 @@ public class Red_A_Vision_Auto extends Auto_Util {
             robot.armservo.setPosition(1);
             //drive backwards to shake out block
             sleep(1000);
-            encoderDrive(0.7,-1,-   1,5);
+            encoderDrive(0.1,-1,-1,5);
             sleep(1000);
             //raise the servo after the block falls down
-            robot.armservo.setPosition(0.3);
-            sleep(500);
+            /*robot.armservo.setPosition(0.3);
+            sleep(500);*/
             //lower the arm
             robot.armmotor.setPower(1);
             sleep(1000);
@@ -201,23 +201,26 @@ public class Red_A_Vision_Auto extends Auto_Util {
             sleep(500);
             //extend the arm
             robot.armmotor.setPower(-1);
-            sleep(300);
+            sleep(400);
             //stop extending and lower the servo
             robot.armmotor.setPower(0);
             robot.armservo.setPosition(1);
             //drive backwards to shake out block
             sleep(1000);
-            encoderDrive(0.7,-1,-1,5);
+            encoderDrive(0.1,-1,-1,5);
             sleep(1000);
             //raise the servo after the block falls down
-            robot.armservo.setPosition(0.3);
-            sleep(500);
+            /*robot.armservo.setPosition(0.3);
+            sleep(500);*/
             //lower the arm
             robot.armmotor.setPower(1);
             sleep(275);
         }
-        //turn right again
         robot.armmotor.setPower(0);
+        sleep(200);
+        robot.armservo.setPosition(UP_POSITION);
+        //sleep(300);
+        //turn right again
         encoderDrive(DRIVE_SPEED,  -5,  5, 5.0);
         sleep(500);
         //drive backwards into the warehouse
